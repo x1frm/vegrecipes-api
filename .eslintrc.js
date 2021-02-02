@@ -29,7 +29,16 @@ module.exports = {
     'arrow-parens': [2, 'as-needed'],
     'import/extensions': [2, 'never'],
     'jest/expect-expect': 0,
+    '@typescript-eslint/restrict-template-expressions': 0,
   },
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        '@typescript-eslint/explicit-module-boundary-types': ['error'],
+      },
+    },
+  ],
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
