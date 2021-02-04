@@ -4,3 +4,4 @@ node_modules
 dist
 .eslintcache
 todo
+src/common/helpers/mtgen-abs-path.js
