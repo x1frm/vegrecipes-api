@@ -1,6 +1,6 @@
 {
   "name": "vegrecipes-be",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/server.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "mongoose": "^5.11.13",
-    "mongoose-to-swagger": "github:x1frm/mongoose-to-swagger#v1.2",
+    "mongoose-to-swagger": "github:x1frm/mongoose-to-swagger#v1.2.1",
     "swagger-autogen": "^2.5.10",
     "swagger-ui-express": "^4.1.6",
     "swagger2openapi": "^7.0.5"

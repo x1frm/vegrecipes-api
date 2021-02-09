@@ -8,6 +8,87 @@
 import mongoose from 'mongoose';
 
 /**
+ * Lean version of DishTypeDocument (type alias of `DishType`)
+ *
+ * Use this type alias to avoid conflicts with model names:
+ * ```
+ * import { DishType } from "../models"
+ * import { DishTypeObject } from "../interfaces/mongoose.gen.ts"
+ *
+ * const dishtypeObject: DishTypeObject = dishtype.toObject();
+ * ```
+ */
+export type DishTypeObject = DishType;
+
+/**
+ * Mongoose Method types
+ *
+ * Use type assertion to ensure DishType methods type safety:
+ * ```
+ * DishTypeSchema.methods = <DishTypeMethods>{ ... };
+ * ```
+ */
+export type DishTypeMethods = {};
+
+/**
+ * Mongoose Static types
+ *
+ * Use type assertion to ensure DishType statics type safety:
+ * ```
+ * DishTypeSchema.statics = <DishTypeStatics>{ ... };
+ * ```
+ */
+export type DishTypeStatics = {};
+
+/**
+ * Mongoose Model type
+ *
+ * Pass this type to the Mongoose Model constructor:
+ * ```
+ * const DishType = mongoose.model<DishTypeDocument, DishTypeModel>("DishType", DishTypeSchema);
+ * ```
+ */
+export interface DishTypeModel extends mongoose.Model<DishTypeDocument>, DishTypeStatics {}
+
+/**
+ * Mongoose Schema type
+ *
+ * Assign this type to new DishType schema instances:
+ * ```
+ * const DishTypeSchema: DishTypeSchema = new mongoose.Schema({ ... })
+ * ```
+ */
+export type DishTypeSchema = mongoose.Schema<DishTypeDocument, DishTypeModel>;
+
+/**
+ * Lean version of DishTypeDocument
+ *
+ * This has all Mongoose getters & functions removed. This type will be returned from `DishTypeDocument.toObject()`. To avoid conflicts with model names, use the type alias `DishTypeObject`.
+ * ```
+ * const dishtypeObject = dishtype.toObject();
+ * ```
+ */
+export interface DishType {
+  name: string;
+  _id: mongoose.Types.ObjectId;
+}
+
+/**
+ * Mongoose Document type
+ *
+ * Pass this type to the Mongoose Model constructor:
+ * ```
+ * const DishType = mongoose.model<DishTypeDocument, DishTypeModel>("DishType", DishTypeSchema);
+ * ```
+ */
+export interface DishTypeDocument
+  extends mongoose.Document<mongoose.Types.ObjectId>,
+    DishTypeMethods {
+  name: string;
+  _id: mongoose.Types.ObjectId;
+}
+
+/**
  * Lean version of EquipmentDocument (type alias of `Equipment`)
  *
  * Use this type alias to avoid conflicts with model names:
@@ -69,7 +150,7 @@ export type EquipmentSchema = mongoose.Schema<EquipmentDocument, EquipmentModel>
  * ```
  */
 export interface Equipment {
-  name?: string;
+  name: string;
   _id: mongoose.Types.ObjectId;
 }
 
@@ -84,7 +165,7 @@ export interface Equipment {
 export interface EquipmentDocument
   extends mongoose.Document<mongoose.Types.ObjectId>,
     EquipmentMethods {
-  name?: string;
+  name: string;
   _id: mongoose.Types.ObjectId;
 }
 
@@ -184,9 +265,8 @@ export interface IngredientDocument
  * ```
  */
 export interface RecipeIngredient {
-  itemId?: string;
+  id?: Ingredient['_id'] | Ingredient;
   amount?: number;
-  _id: mongoose.Types.ObjectId;
 }
 
 /**
@@ -260,8 +340,8 @@ export interface Recipe {
     protein?: number;
     carbohydrates?: number;
   };
-  dishType?: string[];
-  equipmentIds?: string[];
+  dishTypes: (DishType['_id'] | DishType)[];
+  equipment: (Equipment['_id'] | Equipment)[];
   _id: mongoose.Types.ObjectId;
 }
 
@@ -271,9 +351,8 @@ export interface Recipe {
  * Type of `RecipeDocument["ingredients"]` element.
  */
 export interface RecipeIngredientDocument extends mongoose.Types.EmbeddedDocument {
-  itemId?: string;
+  id?: IngredientDocument['_id'] | IngredientDocument;
   amount?: number;
-  _id: mongoose.Types.ObjectId;
 }
 
 /**
@@ -294,7 +373,7 @@ export interface RecipeDocument extends mongoose.Document<mongoose.Types.ObjectI
     protein?: number;
     carbohydrates?: number;
   };
-  dishType?: mongoose.Types.Array<string>;
-  equipmentIds?: mongoose.Types.Array<string>;
+  dishTypes: mongoose.Types.Array<DishTypeDocument['_id'] | DishTypeDocument>;
+  equipment: mongoose.Types.Array<EquipmentDocument['_id'] | EquipmentDocument>;
   _id: mongoose.Types.ObjectId;
 }

@@ -1,36 +1,23 @@
 import mongoose from 'mongoose';
 import { RecipeDocument, RecipeModel, RecipeSchema } from 'src/interfaces/mongoose.gen';
 
-const ingredientKind: string[] = [];
-const dishKind: string[] = [];
-
-const equipmentSchema = new mongoose.Schema({
-  name: String,
-});
-
-const ingredientSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    unique: true,
-    required: true,
+const recipeIngredientSchema = new mongoose.Schema(
+  {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Ingredient',
+    },
+    amount: Number, // in percents
   },
-  availableInDixy: Boolean,
-  price: Number, // per 1 kg
-  ingredientType: {
-    type: [String],
-    enum: ingredientKind,
-  },
-});
+  {
+    _id: false,
+  }
+);
 
 const recipeSchema: RecipeSchema = new mongoose.Schema({
   name: String,
   description: String,
-  ingredients: [
-    {
-      item: ingredientSchema,
-      amount: Number, // in percents
-    },
-  ],
+  ingredients: [recipeIngredientSchema],
   time: Number, // in minutes
   nutrition: {
     // in percents
@@ -38,17 +25,18 @@ const recipeSchema: RecipeSchema = new mongoose.Schema({
     protein: Number,
     carbohydrates: Number,
   },
-  dishType: {
-    type: [String],
-    enum: dishKind,
-  },
-  equipment: [equipmentSchema],
+  dishTypes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'DishType',
+    },
+  ],
+  equipment: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Equipment',
+    },
+  ],
 });
-
-// if (!recipeSchema.options.toJSON) recipeSchema.options.toJSON = {};
-// recipeSchema.options.toJSON.transform = doc => {
-//   const { id, title, columns } = doc;
-//   return { id, title, columns };
-// };
 
 export default mongoose.model<RecipeDocument, RecipeModel>('Recipe', recipeSchema);

@@ -3,11 +3,14 @@ import mongoose from 'mongoose';
 import { PORT, MONGO_CONNECTION_STRING } from './common/config';
 import app from './app';
 
-mongoose.connect(MONGO_CONNECTION_STRING, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-});
+mongoose
+  .connect(MONGO_CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    autoIndex: false,
+  })
+  .catch(console.error);
 
 const db = mongoose.connection;
 

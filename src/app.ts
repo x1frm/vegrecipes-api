@@ -1,15 +1,26 @@
 import express from 'express';
-// const swaggerUi = require('swagger-ui-express');
-// const swaggerDocument = require('../doc/swagger.json');
+import 'express-async-errors';
+import { NODE_ENV } from './common/config';
+import errorHandler from './common/errorHandler';
+import router from './router';
 
 const app = express();
 
 app.use(express.json());
-// app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+if (NODE_ENV === 'development') {
+  import('./doc/swaggerUi.router')
+    .then(module => app.use('/doc', module.default))
+    .catch(console.error);
+}
 
 app.get('/', (req, res) => {
   res.send('Welcome to vegrecipes!');
 });
+
+app.use(router);
+
+app.use(errorHandler);
 
 process.on('uncaughtException', (err: Error, origin: any) => {
   console.log(`Caught exception: ${err}\n Exception origin: ${origin}`);
