@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "start": "nodemon src/server.ts",
-    "test": "jest",
+    "test": "jest -o",
     "build": "tsc",
     "lint": "eslint ./ --ignore-path .gitignore --ext .ts,.js",
     "mt": "mtgen src/**/*.model.ts",
