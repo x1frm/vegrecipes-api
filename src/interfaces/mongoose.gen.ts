@@ -8,18 +8,170 @@
 import mongoose from 'mongoose';
 
 /**
- * Lean version of RecipeIngredientItemDocument
+ * Lean version of EquipmentDocument (type alias of `Equipment`)
  *
- * This has all Mongoose getters & functions removed. This type will be returned from `RecipeIngredientDocument.toObject()`.
+ * Use this type alias to avoid conflicts with model names:
  * ```
- * const recipeingredientObject = recipeingredient.toObject();
+ * import { Equipment } from "../models"
+ * import { EquipmentObject } from "../interfaces/mongoose.gen.ts"
+ *
+ * const equipmentObject: EquipmentObject = equipment.toObject();
  * ```
  */
-export interface RecipeIngredientItem {
+export type EquipmentObject = Equipment;
+
+/**
+ * Mongoose Method types
+ *
+ * Use type assertion to ensure Equipment methods type safety:
+ * ```
+ * EquipmentSchema.methods = <EquipmentMethods>{ ... };
+ * ```
+ */
+export type EquipmentMethods = {};
+
+/**
+ * Mongoose Static types
+ *
+ * Use type assertion to ensure Equipment statics type safety:
+ * ```
+ * EquipmentSchema.statics = <EquipmentStatics>{ ... };
+ * ```
+ */
+export type EquipmentStatics = {};
+
+/**
+ * Mongoose Model type
+ *
+ * Pass this type to the Mongoose Model constructor:
+ * ```
+ * const Equipment = mongoose.model<EquipmentDocument, EquipmentModel>("Equipment", EquipmentSchema);
+ * ```
+ */
+export interface EquipmentModel extends mongoose.Model<EquipmentDocument>, EquipmentStatics {}
+
+/**
+ * Mongoose Schema type
+ *
+ * Assign this type to new Equipment schema instances:
+ * ```
+ * const EquipmentSchema: EquipmentSchema = new mongoose.Schema({ ... })
+ * ```
+ */
+export type EquipmentSchema = mongoose.Schema<EquipmentDocument, EquipmentModel>;
+
+/**
+ * Lean version of EquipmentDocument
+ *
+ * This has all Mongoose getters & functions removed. This type will be returned from `EquipmentDocument.toObject()`. To avoid conflicts with model names, use the type alias `EquipmentObject`.
+ * ```
+ * const equipmentObject = equipment.toObject();
+ * ```
+ */
+export interface Equipment {
+  name?: string;
+  _id: mongoose.Types.ObjectId;
+}
+
+/**
+ * Mongoose Document type
+ *
+ * Pass this type to the Mongoose Model constructor:
+ * ```
+ * const Equipment = mongoose.model<EquipmentDocument, EquipmentModel>("Equipment", EquipmentSchema);
+ * ```
+ */
+export interface EquipmentDocument
+  extends mongoose.Document<mongoose.Types.ObjectId>,
+    EquipmentMethods {
+  name?: string;
+  _id: mongoose.Types.ObjectId;
+}
+
+/**
+ * Lean version of IngredientDocument (type alias of `Ingredient`)
+ *
+ * Use this type alias to avoid conflicts with model names:
+ * ```
+ * import { Ingredient } from "../models"
+ * import { IngredientObject } from "../interfaces/mongoose.gen.ts"
+ *
+ * const ingredientObject: IngredientObject = ingredient.toObject();
+ * ```
+ */
+export type IngredientObject = Ingredient;
+
+/**
+ * Mongoose Method types
+ *
+ * Use type assertion to ensure Ingredient methods type safety:
+ * ```
+ * IngredientSchema.methods = <IngredientMethods>{ ... };
+ * ```
+ */
+export type IngredientMethods = {};
+
+/**
+ * Mongoose Static types
+ *
+ * Use type assertion to ensure Ingredient statics type safety:
+ * ```
+ * IngredientSchema.statics = <IngredientStatics>{ ... };
+ * ```
+ */
+export type IngredientStatics = {};
+
+/**
+ * Mongoose Model type
+ *
+ * Pass this type to the Mongoose Model constructor:
+ * ```
+ * const Ingredient = mongoose.model<IngredientDocument, IngredientModel>("Ingredient", IngredientSchema);
+ * ```
+ */
+export interface IngredientModel extends mongoose.Model<IngredientDocument>, IngredientStatics {}
+
+/**
+ * Mongoose Schema type
+ *
+ * Assign this type to new Ingredient schema instances:
+ * ```
+ * const IngredientSchema: IngredientSchema = new mongoose.Schema({ ... })
+ * ```
+ */
+export type IngredientSchema = mongoose.Schema<IngredientDocument, IngredientModel>;
+
+/**
+ * Lean version of IngredientDocument
+ *
+ * This has all Mongoose getters & functions removed. This type will be returned from `IngredientDocument.toObject()`. To avoid conflicts with model names, use the type alias `IngredientObject`.
+ * ```
+ * const ingredientObject = ingredient.toObject();
+ * ```
+ */
+export interface Ingredient {
   name: string;
   availableInDixy?: boolean;
   price?: number;
-  ingredientType?: string[];
+  ingredientType: {}[];
+  _id: mongoose.Types.ObjectId;
+}
+
+/**
+ * Mongoose Document type
+ *
+ * Pass this type to the Mongoose Model constructor:
+ * ```
+ * const Ingredient = mongoose.model<IngredientDocument, IngredientModel>("Ingredient", IngredientSchema);
+ * ```
+ */
+export interface IngredientDocument
+  extends mongoose.Document<mongoose.Types.ObjectId>,
+    IngredientMethods {
+  name: string;
+  availableInDixy?: boolean;
+  price?: number;
+  ingredientType: mongoose.Types.Array<{}>;
   _id: mongoose.Types.ObjectId;
 }
 
@@ -32,21 +184,8 @@ export interface RecipeIngredientItem {
  * ```
  */
 export interface RecipeIngredient {
-  item?: RecipeIngredientItem;
+  itemId?: string;
   amount?: number;
-  _id: mongoose.Types.ObjectId;
-}
-
-/**
- * Lean version of RecipeEquipmentDocument
- *
- * This has all Mongoose getters & functions removed. This type will be returned from `RecipeDocument.toObject()`.
- * ```
- * const recipeObject = recipe.toObject();
- * ```
- */
-export interface RecipeEquipment {
-  name?: string;
   _id: mongoose.Types.ObjectId;
 }
 
@@ -122,25 +261,7 @@ export interface Recipe {
     carbohydrates?: number;
   };
   dishType?: string[];
-  equipment: RecipeEquipment[];
-  _id: mongoose.Types.ObjectId;
-}
-
-/**
- * Mongoose Document type
- *
- * Pass this type to the Mongoose Model constructor:
- * ```
- * const RecipeIngredient = mongoose.model<RecipeIngredientDocument, RecipeIngredientModel>("RecipeIngredient", RecipeIngredientSchema);
- * ```
- */
-export interface RecipeIngredientItemDocument
-  extends mongoose.Document<mongoose.Types.ObjectId>,
-    RecipeIngredientItemMethods {
-  name: string;
-  availableInDixy?: boolean;
-  price?: number;
-  ingredientType?: mongoose.Types.Array<string>;
+  equipmentIds?: string[];
   _id: mongoose.Types.ObjectId;
 }
 
@@ -150,18 +271,8 @@ export interface RecipeIngredientItemDocument
  * Type of `RecipeDocument["ingredients"]` element.
  */
 export interface RecipeIngredientDocument extends mongoose.Types.EmbeddedDocument {
-  item?: RecipeIngredientItemDocument;
+  itemId?: string;
   amount?: number;
-  _id: mongoose.Types.ObjectId;
-}
-
-/**
- * Mongoose Embedded Document type
- *
- * Type of `RecipeDocument["equipment"]` element.
- */
-export interface RecipeEquipmentDocument extends mongoose.Types.EmbeddedDocument {
-  name?: string;
   _id: mongoose.Types.ObjectId;
 }
 
@@ -184,6 +295,6 @@ export interface RecipeDocument extends mongoose.Document<mongoose.Types.ObjectI
     carbohydrates?: number;
   };
   dishType?: mongoose.Types.Array<string>;
-  equipment: mongoose.Types.DocumentArray<RecipeEquipmentDocument>;
+  equipmentIds?: mongoose.Types.Array<string>;
   _id: mongoose.Types.ObjectId;
 }

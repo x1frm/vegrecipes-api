@@ -27,7 +27,7 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'arrow-parens': [2, 'as-needed'],
-    'import/extensions': [2, 'never'],
+    'import/extensions': [2, 'always', { ignorePackages: true, pattern: { ts: 'never' } }],
     'jest/expect-expect': 0,
     '@typescript-eslint/restrict-template-expressions': 0,
   },

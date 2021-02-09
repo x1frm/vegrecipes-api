@@ -5,3 +5,6 @@ dist
 .eslintcache
 todo
 src/common/helpers/mtgen-abs-path.js
+doc.old
+.vscode/launch.json
+.vscode/tasks.json
