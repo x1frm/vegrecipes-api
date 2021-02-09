@@ -26,5 +26,5 @@ converter.convertFile(swagger2, options, (err, data) => {
   const swagger3 = data.openapi;
   if (!swagger3.components) swagger3.components = {};
   swagger3.components.schemas = { Recipe: m2s(recipe) };
-  fs.writeFile('doc/swagger.json', JSON.stringify(swagger3), console.error);
+  fs.writeFile('doc/swagger.json', JSON.stringify(swagger3, null, 2), console.error);
 });

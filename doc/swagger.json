@@ -1,1 +1,189 @@
-{"openapi":"3.0.0","info":{"title":"Vegrecipes API","version":"0.0.1"},"tags":[],"paths":{"/recipes/":{"get":{"tags":["Recipes"],"summary":"Get All Recipes","description":"","responses":{"200":{"description":"OK"}}},"post":{"tags":["Recipes"],"description":"","requestBody":{"$ref":"#/components/requestBodies/Recipe"},"responses":{"200":{"description":"OK"}}}},"/recipes/{id}":{"get":{"tags":["Recipes"],"description":"","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],"responses":{"200":{"description":"OK"},"404":{"description":"Not Found"}}},"put":{"tags":["Recipes"],"description":"","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],"requestBody":{"$ref":"#/components/requestBodies/Recipe"},"responses":{"200":{"description":"OK"}}},"delete":{"tags":["Recipes"],"description":"","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],"responses":{"204":{"description":"No Content"},"404":{"description":"Not Found"}}}}},"servers":[{"url":"http://localhost:4589"}],"components":{"requestBodies":{"Recipe":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Recipe","type":"string"}}},"description":"Recipe data."}},"schemas":{"Recipe":{"title":"Recipe","properties":{"name":{"type":"string"},"description":{"type":"string"},"ingredients":{"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"amount":{"type":"number"}},"required":[]}},"time":{"type":"number"},"nutrition":{"type":"object","properties":{"fat":{"type":"number"},"protein":{"type":"number"},"carbohydrates":{"type":"number"}}},"dishTypes":{"type":"array","items":{"type":"string"}},"equipment":{"type":"array","items":{"type":"string"}}}}}}}
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Vegrecipes API",
+    "version": "0.0.1"
+  },
+  "tags": [],
+  "paths": {
+    "/recipes/": {
+      "get": {
+        "tags": [
+          "Recipes"
+        ],
+        "summary": "Get All Recipes",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Recipes"
+        ],
+        "description": "",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Recipe"
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/recipes/{id}": {
+      "get": {
+        "tags": [
+          "Recipes"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Recipes"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Recipe"
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Recipes"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4589"
+    }
+  ],
+  "components": {
+    "requestBodies": {
+      "Recipe": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Recipe",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Recipe data."
+      }
+    },
+    "schemas": {
+      "Recipe": {
+        "title": "Recipe",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number"
+                }
+              },
+              "required": []
+            }
+          },
+          "time": {
+            "type": "number"
+          },
+          "nutrition": {
+            "type": "object",
+            "properties": {
+              "fat": {
+                "type": "number"
+              },
+              "protein": {
+                "type": "number"
+              },
+              "carbohydrates": {
+                "type": "number"
+              }
+            }
+          },
+          "dishTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "equipment": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
