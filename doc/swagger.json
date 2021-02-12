@@ -129,6 +129,51 @@
       }
     },
     "schemas": {
+      "DishType": {
+        "title": "DishType",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Equipment": {
+        "title": "Equipment",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Ingredient": {
+        "title": "Ingredient",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "availableInDixy": {
+            "type": "boolean"
+          },
+          "price": {
+            "type": "number"
+          },
+          "ingredientType": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "Recipe": {
         "title": "Recipe",
         "properties": {

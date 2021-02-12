@@ -2,9 +2,16 @@
 const swaggerAutogen = require('swagger-autogen');
 const converter = require('swagger2openapi');
 const m2s = require('mongoose-to-swagger');
-const recipe = require('../../resources/recipes/recipe.model.ts').default;
 const PORT = require('../config').PORT;
 const fs = require('fs');
+const glob = require('glob');
+
+const schemas = {};
+glob.sync('**/*.model.ts').forEach(file => {
+  const model = require('../../../' + file).default;
+  const modelName = model.modelName;
+  schemas[modelName] = m2s(model);
+});
 
 const doc = {
   info: {
@@ -25,6 +32,6 @@ converter.convertFile(swagger2, options, (err, data) => {
   if (err) throw err;
   const swagger3 = data.openapi;
   if (!swagger3.components) swagger3.components = {};
-  swagger3.components.schemas = { Recipe: m2s(recipe) };
+  swagger3.components.schemas = schemas;
   fs.writeFile('doc/swagger.json', JSON.stringify(swagger3, null, 2), console.error);
 });
