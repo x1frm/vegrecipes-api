@@ -5,6 +5,7 @@ const equipmentSchema: EquipmentSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    maxlength: 100,
   },
 });
 

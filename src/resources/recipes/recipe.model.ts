@@ -6,8 +6,13 @@ const recipeIngredientSchema = new mongoose.Schema(
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Ingredient',
+      required: true,
     },
-    amount: Number, // in percents
+    amount: {
+      type: Number,
+      max: 100,
+      min: 0,
+    }, // in percents
   },
   {
     _id: false,
@@ -15,15 +20,34 @@ const recipeIngredientSchema = new mongoose.Schema(
 );
 
 const recipeSchema: RecipeSchema = new mongoose.Schema({
-  name: String,
-  description: String,
+  name: {
+    type: String,
+    required: true,
+    maxLength: 100,
+  },
+  description: {
+    type: String,
+    maxlength: 1000,
+  },
   ingredients: [recipeIngredientSchema],
   time: Number, // in minutes
   nutrition: {
     // in percents
-    fat: Number,
-    protein: Number,
-    carbohydrates: Number,
+    fat: {
+      type: Number,
+      max: 100,
+      min: 0,
+    },
+    protein: {
+      type: Number,
+      max: 100,
+      min: 0,
+    },
+    carbohydrates: {
+      type: Number,
+      max: 100,
+      min: 0,
+    },
   },
   dishTypes: [
     {

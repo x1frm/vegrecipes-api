@@ -265,7 +265,7 @@ export interface IngredientDocument
  * ```
  */
 export interface RecipeIngredient {
-  id?: Ingredient['_id'] | Ingredient;
+  id: Ingredient['_id'] | Ingredient;
   amount?: number;
 }
 
@@ -331,7 +331,7 @@ export type RecipeSchema = mongoose.Schema<RecipeDocument, RecipeModel>;
  * ```
  */
 export interface Recipe {
-  name?: string;
+  name: string;
   description?: string;
   ingredients: RecipeIngredient[];
   time?: number;
@@ -351,7 +351,7 @@ export interface Recipe {
  * Type of `RecipeDocument["ingredients"]` element.
  */
 export interface RecipeIngredientDocument extends mongoose.Types.EmbeddedDocument {
-  id?: IngredientDocument['_id'] | IngredientDocument;
+  id: IngredientDocument['_id'] | IngredientDocument;
   amount?: number;
 }
 
@@ -364,7 +364,7 @@ export interface RecipeIngredientDocument extends mongoose.Types.EmbeddedDocumen
  * ```
  */
 export interface RecipeDocument extends mongoose.Document<mongoose.Types.ObjectId>, RecipeMethods {
-  name?: string;
+  name: string;
   description?: string;
   ingredients: mongoose.Types.DocumentArray<RecipeIngredientDocument>;
   time?: number;

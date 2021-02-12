@@ -5,6 +5,7 @@ const ingredientSchema: IngredientSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    maxlength: 100,
   },
   availableInDixy: Boolean,
   price: Number, // per 1 kg, in RUB
