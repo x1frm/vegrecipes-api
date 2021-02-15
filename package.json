@@ -22,10 +22,7 @@
   },
   "lint-staged": {
     "*.{js,ts}": "eslint --cache",
-    "*.{js,ts,css,md}": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.{js,ts,css,md}": "git add"
   },
   "_moduleAliases": {
     "@": "src"
@@ -38,7 +35,7 @@
     "module-alias": "^2.2.2",
     "mongoose": "^5.11.13",
     "mongoose-to-swagger": "github:x1frm/mongoose-to-swagger#v1.2.1",
-    "swagger-autogen": "^2.5.10",
+    "swagger-autogen": "^2.6.0",
     "swagger-ui-express": "^4.1.6",
     "swagger2openapi": "^7.0.5"
   },

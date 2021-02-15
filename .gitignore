@@ -9,3 +9,4 @@ doc.old
 .vscode/launch.json
 .vscode/tasks.json
 coverage
+globalConfig.json

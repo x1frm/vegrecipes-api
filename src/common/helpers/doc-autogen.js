@@ -25,7 +25,7 @@ const doc = {
 const swagger2 = 'doc/swagger-2.0.json';
 const endpoints = ['src/router.ts'];
 
-swaggerAutogen()(swagger2, endpoints, doc);
+swaggerAutogen()(swagger2, endpoints, doc).catch(e => console.log(e));
 
 const options = {};
 converter.convertFile(swagger2, options, (err, data) => {
@@ -33,5 +33,9 @@ converter.convertFile(swagger2, options, (err, data) => {
   const swagger3 = data.openapi;
   if (!swagger3.components) swagger3.components = {};
   swagger3.components.schemas = schemas;
-  fs.writeFile('doc/swagger.json', JSON.stringify(swagger3, null, 2), console.error);
+  fs.writeFile(
+    'doc/swagger.json',
+    JSON.stringify(swagger3, null, 2),
+    err => err && console.error(err)
+  );
 });
