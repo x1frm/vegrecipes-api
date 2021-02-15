@@ -1,4 +1,5 @@
 // const logger = require('./common/logging');
+import 'module-alias/register';
 import mongoose from 'mongoose';
 import { PORT, MONGO_CONNECTION_STRING } from './common/config';
 import app from './app';

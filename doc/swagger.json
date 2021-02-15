@@ -176,6 +176,9 @@
       },
       "Recipe": {
         "title": "Recipe",
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -195,7 +198,9 @@
                   "type": "number"
                 }
               },
-              "required": []
+              "required": [
+                "id"
+              ]
             }
           },
           "time": {

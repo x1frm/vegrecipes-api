@@ -30,12 +30,20 @@ module.exports = {
     'import/extensions': [2, 'always', { ignorePackages: true, pattern: { ts: 'never' } }],
     'jest/expect-expect': 0,
     '@typescript-eslint/restrict-template-expressions': 0,
+    '@typescript-eslint/no-unsafe-member-access': 1,
+    '@typescript-eslint/no-unsafe-call': 1,
   },
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
       rules: {
         '@typescript-eslint/explicit-module-boundary-types': ['error'],
+      },
+    },
+    {
+      files: ['*.test.*'],
+      rules: {
+        'no-underscore-dangle': 0,
       },
     },
   ],

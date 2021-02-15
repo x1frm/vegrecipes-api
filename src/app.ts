@@ -12,6 +12,8 @@ if (NODE_ENV === 'development') {
   import('./doc/swaggerUi.router')
     .then(module => app.use('/doc', module.default))
     .catch(console.error);
+
+  app.use('/coverage', express.static('coverage/lcov-report'));
 }
 
 app.get('/', (req, res) => {
