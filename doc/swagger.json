@@ -6,7 +6,7 @@
   },
   "tags": [],
   "paths": {
-    "/recipes/": {
+    "/api/recipes/": {
       "get": {
         "tags": [
           "Recipes"
@@ -34,7 +34,7 @@
         }
       }
     },
-    "/recipes/{id}": {
+    "/api/recipes/{id}": {
       "get": {
         "tags": [
           "Recipes"
@@ -107,6 +107,108 @@
           }
         }
       }
+    },
+    "/api/ingredients/": {
+      "get": {
+        "tags": [
+          "Ingredients"
+        ],
+        "summary": "Get All Ingredients",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Ingredients"
+        ],
+        "description": "",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Ingredient"
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ingredients/{id}": {
+      "get": {
+        "tags": [
+          "Ingredients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Ingredients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Ingredient"
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Ingredients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
     }
   },
   "servers": [
@@ -116,6 +218,17 @@
   ],
   "components": {
     "requestBodies": {
+      "Ingredient": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Ingredient",
+              "type": "string"
+            }
+          }
+        },
+        "description": "Ingredient data."
+      },
       "Recipe": {
         "content": {
           "application/json": {

@@ -2,7 +2,7 @@ import express from 'express';
 import 'express-async-errors';
 import { NODE_ENV } from './common/config';
 import errorHandler from './common/errorHandler';
-import router from './router';
+import router from './api.router';
 
 const app = express();
 
@@ -17,10 +17,11 @@ if (NODE_ENV === 'development') {
 }
 
 app.get('/', (req, res) => {
+  // #swagger.ignore = true
   res.send('Welcome to vegrecipes!');
 });
 
-app.use(router);
+app.use('/api', router);
 
 app.use(errorHandler);
 
