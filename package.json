@@ -5,10 +5,10 @@
   "main": "dist/server.js",
   "scripts": {
     "start": "nodemon src/server.ts",
-    "test": "jest -o --runInBand",
+    "test": "jest -o --runInBand --verbose",
     "test:debug": "node -r ts-node/register --inspect node_modules/.bin/jest --runInBand -o",
     "coverage": "jest --coverage",
-    "build": "tsc",
+    "build": "rm -rf dist && tsc --build tsconfig.prod.json",
     "lint": "eslint ./ --ignore-path .gitignore --ext .ts,.js",
     "mt": "mtgen src/**/*.model.ts",
     "debug": "nodemon --inspect src/server.ts"

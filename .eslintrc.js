@@ -32,6 +32,8 @@ module.exports = {
     '@typescript-eslint/restrict-template-expressions': 0,
     '@typescript-eslint/no-unsafe-member-access': 1,
     '@typescript-eslint/no-unsafe-call': 1,
+    'no-void': 0,
+    'import/prefer-default-export': 0,
   },
   overrides: [
     {
@@ -44,6 +46,12 @@ module.exports = {
       files: ['*.test.*'],
       rules: {
         'no-underscore-dangle': 0,
+      },
+    },
+    {
+      files: ['*model.ts'],
+      rules: {
+        '@typescript-eslint/no-misused-promises': 0,
       },
     },
   ],

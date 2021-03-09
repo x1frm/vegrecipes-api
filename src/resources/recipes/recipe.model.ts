@@ -30,7 +30,12 @@ const recipeSchema: RecipeSchema = new mongoose.Schema({
     maxlength: 1000,
   },
   ingredients: [recipeIngredientSchema],
-  time: Number, // in minutes
+  time: {
+    // in minutes
+    type: Number,
+    min: 0,
+    max: 43200,
+  },
   nutrition: {
     // in percents
     fat: {

@@ -1,4 +1,13 @@
 import mongoose from 'mongoose';
+import { OverloadedReturnType } from 'src/common/types';
+
+export const clearDatabase = async (): Promise<
+  OverloadedReturnType<typeof mongoose.Collection.deleteMany[]>
+> => {
+  const { collections } = mongoose.connection;
+
+  return Promise.all(Object.values(collections).map(async c => c.deleteMany({})));
+};
 
 export const dbInit = (): void => {
   mongoose.connect(
@@ -19,20 +28,7 @@ export const dbInit = (): void => {
 };
 
 export const dbClose = async (): Promise<void> => {
+  await clearDatabase();
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
 };
-
-/**
-* Remove all the data for all db collections.
-
-module.exports.clearDatabase = async () => {
-  const collections = mongoose.connection.collections;
-
-  for (const key in collections) {
-      const collection = collections[key];
-      await collection.deleteMany();
-  }
-}
-
-*/
