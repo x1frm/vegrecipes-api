@@ -39,10 +39,8 @@ glob('**/*.model.ts', async (err, files) => {
         if (!swagger3.components) swagger3.components = {};
         swagger3.components.schemas = schemas;
 
-        fs.writeFile(
-          swaggerFile,
-          JSON.stringify(swagger3, null, 2),
-          err => err && console.error(err)
+        fs.writeFile(swaggerFile, JSON.stringify(swagger3, null, 2), err =>
+          err ? console.error(err) : console.log('Swagger file has been written')
         );
       });
     })

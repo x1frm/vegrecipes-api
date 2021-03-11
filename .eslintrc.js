@@ -48,12 +48,6 @@ module.exports = {
         'no-underscore-dangle': 0,
       },
     },
-    {
-      files: ['*model.ts'],
-      rules: {
-        '@typescript-eslint/no-misused-promises': 0,
-      },
-    },
   ],
   settings: {
     'import/parsers': {

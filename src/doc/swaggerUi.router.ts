@@ -1,7 +1,6 @@
 import swaggerUi, { JsonObject } from 'swagger-ui-express';
 import express from 'express';
 import fs from 'fs';
-import '../../doc/doc-autogen.js';
 
 const router = express.Router();
 

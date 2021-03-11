@@ -8,7 +8,7 @@ const app = express();
 
 app.use(express.json());
 
-if (NODE_ENV === 'development') {
+if (/^(development|test)$/.test(NODE_ENV as string)) {
   import('./doc/swaggerUi.router')
     .then(module => app.use('/doc', module.default))
     .catch(console.error);
