@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
 import { Equipment as IEquipment } from 'src/interfaces/mongoose.gen';
-import { LongStr } from '../../common/utils';
+import { longStr } from '../../common/utils';
 import { dbInit, dbClose } from '../../../test/setup/shared.config';
 import Equipment from './equipment.model';
 
@@ -40,7 +40,7 @@ describe('Equipment Model Test', () => {
 
     const incorrect: DeepPartial<IEquipment> = {
       ...equipmentData,
-      name: LongStr(101),
+      name: longStr(101),
     };
 
     const equipment = new Equipment(incorrect);

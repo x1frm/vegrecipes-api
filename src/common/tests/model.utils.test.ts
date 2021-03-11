@@ -15,7 +15,7 @@ describe('Similar string validator', () => {
   beforeAll(dbInit);
   afterAll(dbClose);
 
-  const validator = utils.getSimilarStringValidator('foo');
+  const validator = utils.getUniqueValidator('foo');
   const schema = new mongoose.Schema({ foo: { type: String, validate: validator } });
   const modelName = 'TestModel';
   const Model = mongoose.model(modelName, schema);

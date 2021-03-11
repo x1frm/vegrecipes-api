@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { IngredientDocument, IngredientModel, IngredientSchema } from 'src/interfaces/mongoose.gen';
-import { getSimilarStringValidator, nameSetter } from '../../common/model.utils';
+import { getUniqueValidator, nameSetter } from '../../common/model.utils';
 
 const ingredientSchema: IngredientSchema = new mongoose.Schema({
   name: {
@@ -8,7 +8,7 @@ const ingredientSchema: IngredientSchema = new mongoose.Schema({
     required: true,
     maxlength: 100,
     set: nameSetter,
-    validate: getSimilarStringValidator('name'),
+    validate: getUniqueValidator('name'),
   },
   availableInDixy: Boolean,
   price: {

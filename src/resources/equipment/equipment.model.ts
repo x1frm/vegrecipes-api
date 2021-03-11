@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { EquipmentDocument, EquipmentModel, EquipmentSchema } from 'src/interfaces/mongoose.gen';
-import { getSimilarStringValidator, nameSetter } from '../../common/model.utils';
+import { getUniqueValidator, nameSetter } from '../../common/model.utils';
 
 const equipmentSchema: EquipmentSchema = new mongoose.Schema({
   name: {
@@ -8,7 +8,7 @@ const equipmentSchema: EquipmentSchema = new mongoose.Schema({
     required: true,
     maxlength: 100,
     set: nameSetter,
-    validate: getSimilarStringValidator('name'),
+    validate: getUniqueValidator('name'),
   },
 });
 

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
 import { Recipe as IRecipe } from 'src/interfaces/mongoose.gen';
-import { LongStr } from '../../common/utils';
+import { longStr } from '../../common/utils';
 import { dbInit, dbClose } from '../../../test/setup/shared.config';
 import Recipe from './recipe.model';
 
@@ -60,8 +60,8 @@ describe('Recipe Model Test', () => {
 
     const incorrect: DeepPartial<IRecipe> = {
       ...recipeData,
-      name: LongStr(101),
-      description: LongStr(1001),
+      name: longStr(101),
+      description: longStr(1001),
       ingredients: [
         {
           id: new mongoose.Types.ObjectId(),

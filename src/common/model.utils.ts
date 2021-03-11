@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export function getSimilarStringValidator(key: string) {
+export function getUniqueValidator(key: string) {
   return async function validator(this: mongoose.Document, value: string): Promise<void> {
     const Model = this.constructor as mongoose.Model<typeof this>;
     const sameNameDocCount = await Model.findOne({

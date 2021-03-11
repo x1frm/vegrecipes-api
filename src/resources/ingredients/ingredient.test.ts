@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
 import { Ingredient as IIngredient } from 'src/interfaces/mongoose.gen';
-import { LongStr } from '../../common/utils';
+import { longStr } from '../../common/utils';
 import { dbInit, dbClose } from '../../../test/setup/shared.config';
 import Ingredient from './ingredient.model';
 
@@ -43,7 +43,7 @@ describe('Ingredient Model Test', () => {
 
     const incorrect: DeepPartial<IIngredient> = {
       ...ingredientData,
-      name: LongStr(101),
+      name: longStr(101),
       price: 200000,
     };
 
