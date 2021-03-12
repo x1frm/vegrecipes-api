@@ -1,7 +1,6 @@
-// This script is supposed to be run after each run of mongoose-tsgen
-// It takes all %ModelName%Object types from mongoose.gen.ts
-// And exports interfaces of mongoose documents
-// They can be used to describe objects, which are passed to model constructors with new MyModel(obj: IMyModel)
+// This script is supposed to be run after each run of mongoose-tsgen.
+// It takes all %ModelName%Object types from mongoose.gen.ts and exports interfaces of schema-definition objects.
+// They can be used to describe objects that are passed to model constructors with new MyModel(obj: IMyModel)
 import { uniq } from 'lodash';
 import { writeFile, readFile } from 'fs';
 // eslint-disable-next-line import/no-extraneous-dependencies
