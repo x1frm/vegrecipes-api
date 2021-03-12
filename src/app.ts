@@ -25,6 +25,7 @@ app.use('/api', router);
 
 app.use(errorHandler);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 process.on('uncaughtException', (err: Error, origin: any) => {
   console.log(`Caught exception: ${err}\n Exception origin: ${origin}`);
 });

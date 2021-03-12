@@ -10,7 +10,7 @@
     "coverage": "jest --coverage",
     "build": "rm -rf dist && tsc --build tsconfig.prod.json",
     "lint": "eslint ./ --ignore-path .gitignore --ext .ts,.js",
-    "mt": "mtgen src/**/*.model.ts && ts-node ./helpers/generate-doc-interfaces.ts",
+    "mt": "mtgen src/**/*.model.ts",
     "debug": "nodemon --inspect src/server.ts"
   },
   "author": "",

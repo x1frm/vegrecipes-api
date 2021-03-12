@@ -6,6 +6,7 @@ describe('/doc', () => {
     process.env.NODE_ENV = 'development';
     const res = await request(app).get('/doc/');
     expect(res.status).toBe(200);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     expect(res.headers?.['content-type']).toContain('text/html');
   });
 });
