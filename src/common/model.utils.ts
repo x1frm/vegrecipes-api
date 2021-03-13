@@ -1,3 +1,4 @@
+import { isNil } from 'lodash';
 import mongoose from 'mongoose';
 
 export function getUniqueValidator(key: string) {
@@ -15,4 +16,8 @@ export function getUniqueValidator(key: string) {
 export function nameSetter(val: string): string {
   const result = val.trim().replace(/(\.|,|;|\s)+$/, '');
   return result[0].toUpperCase() + result.slice(1);
+}
+
+export function objectIdGetter(value?: mongoose.Schema.Types.ObjectId): string | undefined {
+  return isNil(value) ? value : value.toString();
 }

@@ -234,7 +234,7 @@ export interface Ingredient {
   name: string;
   availableInDixy?: boolean;
   price?: number;
-  ingredientType: {}[];
+  ingredientType: string[];
   _id: mongoose.Types.ObjectId;
 }
 
@@ -252,7 +252,7 @@ export interface IngredientDocument
   name: string;
   availableInDixy?: boolean;
   price?: number;
-  ingredientType: mongoose.Types.Array<{}>;
+  ingredientType: mongoose.Types.Array<string>;
   _id: mongoose.Types.ObjectId;
 }
 
@@ -267,6 +267,30 @@ export interface IngredientDocument
 export interface RecipeIngredient {
   id: Ingredient['_id'] | Ingredient;
   amount?: number;
+}
+
+/**
+ * Lean version of RecipeDishTypeDocument
+ *
+ * This has all Mongoose getters & functions removed. This type will be returned from `RecipeDocument.toObject()`.
+ * ```
+ * const recipeObject = recipe.toObject();
+ * ```
+ */
+export interface RecipeDishType {
+  id?: DishType['_id'] | DishType;
+}
+
+/**
+ * Lean version of RecipeEquipmentDocument
+ *
+ * This has all Mongoose getters & functions removed. This type will be returned from `RecipeDocument.toObject()`.
+ * ```
+ * const recipeObject = recipe.toObject();
+ * ```
+ */
+export interface RecipeEquipment {
+  id?: DishType['_id'] | DishType;
 }
 
 /**
@@ -340,8 +364,8 @@ export interface Recipe {
     protein?: number;
     carbohydrates?: number;
   };
-  dishTypes: (DishType['_id'] | DishType)[];
-  equipment: (Equipment['_id'] | Equipment)[];
+  dishTypes: RecipeDishType[];
+  equipment: RecipeEquipment[];
   _id: mongoose.Types.ObjectId;
 }
 
@@ -353,6 +377,24 @@ export interface Recipe {
 export interface RecipeIngredientDocument extends mongoose.Types.EmbeddedDocument {
   id: IngredientDocument['_id'] | IngredientDocument;
   amount?: number;
+}
+
+/**
+ * Mongoose Embedded Document type
+ *
+ * Type of `RecipeDocument["dishTypes"]` element.
+ */
+export interface RecipeDishTypeDocument extends mongoose.Types.EmbeddedDocument {
+  id?: DishTypeDocument['_id'] | DishTypeDocument;
+}
+
+/**
+ * Mongoose Embedded Document type
+ *
+ * Type of `RecipeDocument["equipment"]` element.
+ */
+export interface RecipeEquipmentDocument extends mongoose.Types.EmbeddedDocument {
+  id?: DishTypeDocument['_id'] | DishTypeDocument;
 }
 
 /**
@@ -373,7 +415,7 @@ export interface RecipeDocument extends mongoose.Document<mongoose.Types.ObjectI
     protein?: number;
     carbohydrates?: number;
   };
-  dishTypes: mongoose.Types.Array<DishTypeDocument['_id'] | DishTypeDocument>;
-  equipment: mongoose.Types.Array<EquipmentDocument['_id'] | EquipmentDocument>;
+  dishTypes: mongoose.Types.DocumentArray<RecipeDishTypeDocument>;
+  equipment: mongoose.Types.DocumentArray<RecipeEquipmentDocument>;
   _id: mongoose.Types.ObjectId;
 }

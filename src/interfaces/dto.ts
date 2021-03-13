@@ -8,9 +8,9 @@ export interface RecipeDto {
     protein?: number;
     carbohydrates?: number;
   };
-  dishTypes: string[];
-  equipment: string[];
-  _id: string;
+  dishTypes: RecipeDishTypeDto[];
+  equipment: RecipeEquipmentDto[];
+  _id?: string;
 }
 
 export interface RecipeIngredientDto {
@@ -18,20 +18,28 @@ export interface RecipeIngredientDto {
   amount?: number;
 }
 
-export interface Ingredient {
+export interface RecipeDishTypeDto {
+  id: string;
+}
+
+export interface RecipeEquipmentDto {
+  id: string;
+}
+
+export interface IngredientDto {
   name: string;
   availableInDixy?: boolean;
   price?: number;
   ingredientType: string[];
-  _id: string;
+  _id?: string;
 }
 
-export interface Equipment {
+export interface EquipmentDto {
   name: string;
-  _id: string;
+  _id?: string;
 }
 
-export interface DishType {
+export interface DishTypeDto {
   name: string;
-  _id: string;
+  _id?: string;
 }

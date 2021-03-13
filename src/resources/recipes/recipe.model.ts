@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import { RecipeDocument, RecipeModel, RecipeSchema } from 'src/interfaces/mongoose.gen';
+import { objectIdGetter } from '../../common/model.utils';
+
+mongoose.SchemaTypes.ObjectId.get(objectIdGetter);
 
 const recipeIngredientSchema = new mongoose.Schema(
   {
@@ -13,6 +16,30 @@ const recipeIngredientSchema = new mongoose.Schema(
       max: 100,
       min: 0,
     }, // in percents
+  },
+  {
+    _id: false,
+  }
+);
+
+const recipeDishTypeSchema = new mongoose.Schema(
+  {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'DishType',
+    },
+  },
+  {
+    _id: false,
+  }
+);
+
+const recipeEquipmentSchema = new mongoose.Schema(
+  {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'DishType',
+    },
   },
   {
     _id: false,
@@ -54,18 +81,17 @@ const recipeSchema: RecipeSchema = new mongoose.Schema({
       min: 0,
     },
   },
-  dishTypes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'DishType',
-    },
-  ],
-  equipment: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Equipment',
-    },
-  ],
+  dishTypes: [recipeDishTypeSchema],
+  equipment: [recipeEquipmentSchema],
 });
+
+recipeEquipmentSchema.set('toObject', { getters: true });
+recipeEquipmentSchema.set('toJSON', { getters: true });
+
+recipeIngredientSchema.set('toObject', { getters: true });
+recipeIngredientSchema.set('toJSON', { getters: true });
+
+recipeDishTypeSchema.set('toObject', { getters: true });
+recipeDishTypeSchema.set('toJSON', { getters: true });
 
 export default mongoose.model<RecipeDocument, RecipeModel>('Recipe', recipeSchema);
