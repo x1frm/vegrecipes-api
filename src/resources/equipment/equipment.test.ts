@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
 import { Equipment as IEquipment } from 'src/interfaces/mongoose.gen';
 import { longStr } from '../../common/utils';
-import { dbInit, dbClose } from '../../../test/setup/shared.config';
 import Equipment from './equipment.model';
 
 const equipmentData: DeepPartial<IEquipment> = {
@@ -10,9 +9,6 @@ const equipmentData: DeepPartial<IEquipment> = {
 };
 
 describe('Equipment Model Test', () => {
-  beforeAll(dbInit);
-  afterAll(dbClose);
-
   it('creates and saves equipment', async () => {
     expect.assertions(3);
     const equipment = new Equipment(equipmentData);

@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
 import { Ingredient as IIngredient } from 'src/interfaces/mongoose.gen';
 import { longStr } from '../../common/utils';
-import { dbInit, dbClose } from '../../../test/setup/shared.config';
 import Ingredient from './ingredient.model';
 
 const ingredientData: DeepPartial<IIngredient> = {
@@ -13,9 +12,6 @@ const ingredientData: DeepPartial<IIngredient> = {
 };
 
 describe('Ingredient Model Test', () => {
-  beforeAll(dbInit);
-  afterAll(dbClose);
-
   it('creates and saves ingredient', async () => {
     expect.assertions(3);
     const ingredient = new Ingredient(ingredientData);

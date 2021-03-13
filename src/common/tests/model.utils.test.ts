@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { dbClose, dbInit } from '../../../test/setup/shared.config';
 import * as utils from '../model.utils';
 
 describe('Name setter', () => {
@@ -12,9 +11,6 @@ describe('Name setter', () => {
 });
 
 describe('Similar string validator', () => {
-  beforeAll(dbInit);
-  afterAll(dbClose);
-
   const validator = utils.getUniqueValidator('foo');
   const schema = new mongoose.Schema({ foo: { type: String, validate: validator } });
   const modelName = 'TestModel';

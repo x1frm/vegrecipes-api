@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
 import { DishType as IDishType } from 'src/interfaces/mongoose.gen';
-import { dbInit, dbClose } from '../../../test/setup/shared.config';
 import DishType from './dishType.model';
 
 const dishTypeData: DeepPartial<IDishType> = {
@@ -9,9 +8,6 @@ const dishTypeData: DeepPartial<IDishType> = {
 };
 
 describe('DishType Model Test', () => {
-  beforeAll(dbInit);
-  afterAll(dbClose);
-
   it('creates and saves dishType', async () => {
     expect.assertions(3);
     const dishType = new DishType(dishTypeData);

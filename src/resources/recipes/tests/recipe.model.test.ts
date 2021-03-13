@@ -1,15 +1,11 @@
 import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
 import { longStr } from '../../../common/utils';
-import { dbInit, dbClose } from '../../../../test/setup/shared.config';
 import Recipe from '../recipe.model';
 import { getRecipeData } from './helpers';
 import { RecipeDto } from '../../../interfaces/dto';
 
 describe('Recipe Model Test', () => {
-  beforeAll(dbInit);
-  afterAll(dbClose);
-
   it('creates and saves recipe', async () => {
     expect.assertions(3);
     const recipe = new Recipe(getRecipeData());
