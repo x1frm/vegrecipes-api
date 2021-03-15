@@ -1,6 +1,6 @@
 import express from 'express';
-import recipeRouter from './resources/recipes/recipe.router';
-import ingredientRouter from './resources/ingredients/ingredient.router';
+import recipeRouter from './resources/recipes/recipes.router';
+import ingredientRouter from './resources/ingredients/ingredients.router';
 
 const router = express.Router();
 router.use('/recipes', recipeRouter);

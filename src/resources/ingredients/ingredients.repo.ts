@@ -1,5 +1,5 @@
 import { IngredientDocument } from 'src/interfaces/mongoose.gen';
-import Ingredient from './ingredient.model';
+import Ingredient from './ingredients.model';
 
 export default {
   async getAll(): Promise<IngredientDocument[]> {

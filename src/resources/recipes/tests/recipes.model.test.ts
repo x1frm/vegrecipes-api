@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
 import { longStr } from '../../../common/utils';
-import Recipe from '../recipe.model';
+import Recipe from '../recipes.model';
 import { getRecipeData } from './helpers';
 import { RecipeDto } from '../../../interfaces/dto';
 

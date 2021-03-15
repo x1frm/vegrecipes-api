@@ -1,7 +1,7 @@
 import { IngredientDocument } from 'src/interfaces/mongoose.gen';
 import mongoose from 'mongoose';
-import ingredientsRepo from './ingredient.repo';
-import Ingredient from './ingredient.model';
+import ingredientsRepo from './ingredients.repo';
+import Ingredient from './ingredients.model';
 
 const getId = mongoose.Types.ObjectId;
 

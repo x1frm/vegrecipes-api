@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
 import { DishType as IDishType } from 'src/interfaces/mongoose.gen';
-import DishType from './dishType.model';
+import DishType from './dishTypes.model';
 
 const dishTypeData: DeepPartial<IDishType> = {
   name: 'Peanut',
