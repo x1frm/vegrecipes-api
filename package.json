@@ -1,7 +1,7 @@
 {
-  "name": "vegrecipes-be",
+  "name": "vegrecipes-api",
   "version": "0.0.1",
-  "description": "",
+  "description": "API for a recipe storing and managing web application",
   "main": "dist/server.js",
   "scripts": {
     "start": "ts-node doc/doc-autogen.js && nodemon src/server.ts",
@@ -13,8 +13,12 @@
     "mt": "mtgen src/**/*.model.ts",
     "debug": "ts-node doc/doc-autogen.js && nodemon --inspect src/server.ts"
   },
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Alexander Shvets",
+    "email": "alex-shvets@yandex.ru",
+    "url": "https://github.com/x1frm"
+  },
+  "license": "MIT",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged && npm test"
