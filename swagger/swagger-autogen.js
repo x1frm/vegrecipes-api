@@ -17,7 +17,7 @@ const doc = {
   schemes: ['http'],
 };
 
-const swaggerFile = 'doc/swagger.json';
+const swaggerFile = 'swagger/swagger.json';
 const endpoints = ['src/app.ts'];
 
 glob('**/*.model.ts', async (err, files) => {
