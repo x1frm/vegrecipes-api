@@ -4,14 +4,14 @@
   "description": "API for a recipe storing and managing web application",
   "main": "dist/server.js",
   "scripts": {
-    "start": "ts-node swagger/swagger-autogen.js && nodemon src/server.ts",
+    "start": "ts-node swagger/generate-swagger.js && nodemon src/server.ts",
     "test": "jest -o --runInBand --verbose",
     "test:debug": "node -r ts-node/register --inspect node_modules/.bin/jest --runInBand -o",
     "coverage": "jest --coverage",
     "build": "rm -rf dist && tsc --build tsconfig.prod.json",
     "lint": "eslint ./ --ignore-path .gitignore --ext .ts,.js",
     "mt": "mtgen src/**/*.model.ts",
-    "debug": "ts-node swagger/swagger-autogen.js && nodemon --inspect src/server.ts"
+    "debug": "ts-node swagger/generate-swagger.js && nodemon --inspect src/server.ts"
   },
   "author": {
     "name": "Alexander Shvets",
