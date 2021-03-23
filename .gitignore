@@ -10,3 +10,4 @@ doc.old
 .vscode/tasks.json
 coverage
 globalConfig.json
+log
