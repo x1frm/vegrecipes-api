@@ -1,12 +1,15 @@
 import express from 'express';
 import 'express-async-errors';
 import pino from 'pino';
+import helmet from 'helmet';
 import { NODE_ENV } from './common/config';
 import errorHandler from './common/errorHandler';
 import router from './api.router';
 import logger, { debug, loggerMiddleware } from './common/logger';
 
 const app = express();
+
+app.use(helmet());
 
 app.use(express.json());
 
