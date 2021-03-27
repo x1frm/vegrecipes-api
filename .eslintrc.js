@@ -44,10 +44,11 @@ module.exports = {
         '@typescript-eslint/no-unsafe-member-access': 1,
         '@typescript-eslint/no-unsafe-call': 1,
         'import/prefer-default-export': 0,
+        'no-return-await': 0,
       },
       overrides: [
         {
-          files: ['*.test.*'],
+          files: ['*.test.*', '**/test/**'],
           rules: {
             'no-underscore-dangle': 0,
             '@typescript-eslint/no-unsafe-member-access': 0,
