@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as recipesService from './recipes.service';
+import recipesService from './recipes.service';
 
 class RecipesController {
   getAll = async (req: Request, res: Response) => {

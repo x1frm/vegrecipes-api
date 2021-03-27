@@ -5,15 +5,17 @@ import Recipe from './recipes.model';
 
 const getId = mongoose.Types.ObjectId;
 
-export const getAll = (): Promise<RecipeDocument[]> => recipesRepo.getAll();
+class RecipesService {
+  getAll = (): Promise<RecipeDocument[]> => recipesRepo.getAll();
 
-export const getById = (id: string): Promise<RecipeDocument | null> =>
-  recipesRepo.getById(getId(id));
+  getById = (id: string): Promise<RecipeDocument | null> => recipesRepo.getById(getId(id));
 
-export const add = (recipe: RecipeDocument): Promise<RecipeDocument> =>
-  recipesRepo.add(new Recipe(recipe));
+  add = (recipe: RecipeDocument): Promise<RecipeDocument> => recipesRepo.add(new Recipe(recipe));
 
-export const upd = (id: string, recipe: RecipeDocument): Promise<RecipeDocument | null> =>
-  recipesRepo.upd(getId(id), recipe);
+  upd = (id: string, recipe: RecipeDocument): Promise<RecipeDocument | null> =>
+    recipesRepo.upd(getId(id), recipe);
 
-export const del = (id: string): Promise<RecipeDocument | null> => recipesRepo.del(getId(id));
+  del = (id: string): Promise<RecipeDocument | null> => recipesRepo.del(getId(id));
+}
+
+export default new RecipesService();
