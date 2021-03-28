@@ -45,6 +45,7 @@ module.exports = {
         '@typescript-eslint/no-unsafe-call': 1,
         'import/prefer-default-export': 0,
         'no-return-await': 0,
+        'class-methods-use-this': 0,
       },
       overrides: [
         {

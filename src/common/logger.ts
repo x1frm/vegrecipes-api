@@ -6,7 +6,7 @@ import pinoDebug from 'pino-debug';
 import debugModule from 'debug';
 import { LOG_DIR, NODE_ENV, LOG_LEVEL } from './config';
 
-const isDev = NODE_ENV === 'development';
+const isDev = /^(development|test)$/.test(NODE_ENV as string);
 
 // In dev mode, router responses with status <500 are marked as "debug"
 // Debug+ logs are written to the file, Info+ are also written to stdout

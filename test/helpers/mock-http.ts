@@ -18,7 +18,6 @@ export interface Mock {
 }
 
 class MockHttp {
-  // eslint-disable-next-line class-methods-use-this
   private request(method: RequestMethod, url: string, body?: Body): Mock {
     return {
       mock: [
