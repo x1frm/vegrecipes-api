@@ -1,13 +1,10 @@
 import { RecipeDocument } from 'src/interfaces/mongoose.gen';
 import mongoose from 'mongoose';
-import axios from 'axios';
 import { nanoid } from 'nanoid';
-import { createWriteStream } from 'fs';
+import scraper from 'website-scraper';
 import recipesRepo from './recipes.repo';
 import Recipe from './recipes.model';
-import logger, { debug } from '../../common/logger';
-
-const dbg = debug('recipes:service');
+import { getHostname } from '../../common/utils';
 
 const getId = mongoose.Types.ObjectId;
 
@@ -24,23 +21,31 @@ class RecipesService {
   del = (id: string): Promise<RecipeDocument | null> => recipesRepo.del(getId(id));
 
   async saveExternalHTML(url: string): Promise<string> {
-    const res = await axios({
-      method: 'GET',
-      url,
-      responseType: 'stream',
-    });
     const id = nanoid(12);
 
-    dbg(res);
-
-    const body = res.data as NodeJS.ReadStream;
-    const writeStream = createWriteStream(`data/external-recipes/${id}.html`);
-
-    return await new Promise((resolve, reject) => {
-      body.pipe(writeStream);
-      body.on('error', reject);
-      writeStream.on('finish', () => resolve(id));
+    await scraper({
+      urls: [url],
+      directory: `data/external-recipes/${id}`,
+      maxRecursiveDepth: 1,
+      maxDepth: 2,
+      request: {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36',
+        },
+      },
+      subdirectories: [
+        { directory: 'img', extensions: ['.jpg', '.png', '.svg'] },
+        { directory: 'js', extensions: ['.js'] },
+        { directory: 'css', extensions: ['.css'] },
+      ],
+      urlFilter(sublinkUrl: string) {
+        const hostname = getHostname(url);
+        return sublinkUrl.includes(hostname);
+      },
     });
+
+    return id;
   }
 }
 

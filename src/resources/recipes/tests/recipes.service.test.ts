@@ -11,7 +11,7 @@ describe('Recipes Service', () => {
     expect(id).toHaveLength(12);
 
     return new Promise((resolve, reject) => {
-      readFile(`data/external-recipes/${id}.html`, 'utf-8', (err, data) => {
+      readFile(`data/external-recipes/${id}/index.html`, 'utf-8', (err, data) => {
         if (err) reject(err);
         expect(data).toContain('Булгур с тыквой');
         resolve(0);
