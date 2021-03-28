@@ -1,5 +1,4 @@
-// import mongoose from 'mongoose';
-import { RecipeDto } from '../../../interfaces/dto';
+import { RecipeDto } from '../recipe.dto';
 
 export const getRecipeData = (): RecipeDto => ({
   name: 'Blinchiki',

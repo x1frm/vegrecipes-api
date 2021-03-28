@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { clearDatabase } from '../../../../test/setup/db';
 import app from '../../../app';
-import { RecipeDto } from '../../../interfaces/dto';
+import { RecipeDto } from '../recipe.dto';
 import { getRecipeData } from './helpers';
 
 const request = supertest(app);

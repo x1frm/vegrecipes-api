@@ -25,21 +25,3 @@ export interface RecipeDishTypeDto {
 export interface RecipeEquipmentDto {
   id: string;
 }
-
-export interface IngredientDto {
-  name: string;
-  availableInDixy?: boolean;
-  price?: number;
-  ingredientType: string[];
-  _id?: string;
-}
-
-export interface EquipmentDto {
-  name: string;
-  _id?: string;
-}
-
-export interface DishTypeDto {
-  name: string;
-  _id?: string;
-}

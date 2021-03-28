@@ -1,6 +1,6 @@
 import mockHttp from '../../../../test/helpers/mock-http';
 import { clearDatabase } from '../../../../test/setup/db';
-import { RecipeDto } from '../../../interfaces/dto';
+import { RecipeDto } from '../recipe.dto';
 import recipesController from '../recipes.controller';
 import { getRecipeData } from './helpers';
 

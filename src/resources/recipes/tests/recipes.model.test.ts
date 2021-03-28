@@ -3,7 +3,7 @@ import { DeepPartial } from 'src/common/types';
 import { longStr } from '../../../common/utils';
 import Recipe from '../recipes.model';
 import { getRecipeData } from './helpers';
-import { RecipeDto } from '../../../interfaces/dto';
+import { RecipeDto } from '../recipe.dto';
 
 describe('Recipe Model Test', () => {
   it('creates and saves recipe', async () => {
