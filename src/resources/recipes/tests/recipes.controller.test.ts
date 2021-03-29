@@ -1,13 +1,13 @@
 import mockHttp from '../../../../test/helpers/mock-http';
 import { clearDatabase } from '../../../../test/setup/db';
-import { RecipeDto } from '../recipe.dto';
+import { RecipeRequestDto, RecipeResponseDto } from '../recipe.dto';
 import recipesController from '../recipes.controller';
 import { getRecipeData } from './helpers';
 
 const url = '/api/recipes/';
 
 const recipe = getRecipeData();
-const postOne = async (item: RecipeDto = recipe) => {
+const postOne = async (item: RecipeRequestDto = recipe) => {
   const mock = mockHttp.post(url, item);
   await recipesController.add(...mock.mock);
   return mock;
@@ -62,7 +62,7 @@ describe('/recipes/', () => {
     expect.assertions(2);
 
     const post = await postOne();
-    const id = (post.body as RecipeDto)._id;
+    const id = (post.body as RecipeResponseDto)._id;
     const get = mockHttp.get(`${url}${id}`).params({ id });
 
     await recipesController.getById(...get.mock);
@@ -77,12 +77,12 @@ describe('/recipes/', () => {
     const post = await postOne();
     const updated = getRecipeData();
     updated.description = 'Tasty breakfast';
-    const postId = (post.body as RecipeDto)._id;
+    const postId = (post.body as RecipeResponseDto)._id;
     const put = mockHttp.put(`${url}${postId}`, updated).params({ id: postId });
 
     await recipesController.replace(...put.mock);
 
-    const id = (post.body as RecipeDto)._id;
+    const id = (post.body as RecipeResponseDto)._id;
     const get = mockHttp.get(`${url}${id}`).params({ id });
     await recipesController.getById(...get.mock);
 
@@ -96,7 +96,7 @@ describe('/recipes/', () => {
     expect.assertions(1);
 
     const post = await postOne();
-    const id = (post.body as RecipeDto)._id;
+    const id = (post.body as RecipeResponseDto)._id;
     const del = mockHttp.del(`${url}${id}`).params({ id });
 
     await recipesController.remove(...del.mock);

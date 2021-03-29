@@ -1,14 +1,14 @@
 import supertest from 'supertest';
 import { clearDatabase } from '../../../../test/setup/db';
 import app from '../../../app';
-import { RecipeDto } from '../recipe.dto';
+import { RecipeRequestDto, RecipeResponseDto } from '../recipe.dto';
 import { getRecipeData } from './helpers';
 
 const request = supertest(app);
 const url = '/api/recipes/';
 
 const recipe = getRecipeData();
-const postOne = (item: RecipeDto = recipe) => request.post(url).send(item).expect(200);
+const postOne = (item: RecipeRequestDto = recipe) => request.post(url).send(item).expect(200);
 
 describe('/recipes/', () => {
   afterEach(clearDatabase);
@@ -44,7 +44,7 @@ describe('/recipes/', () => {
 
     const post = await postOne();
 
-    const get = await request.get(`${url}${(post.body as RecipeDto)._id}`).expect(200);
+    const get = await request.get(`${url}${(post.body as RecipeResponseDto)._id}`).expect(200);
     expect(get.body).toMatchObject(recipe);
   });
 
@@ -56,18 +56,18 @@ describe('/recipes/', () => {
     updated.description = 'Tasty breakfast';
 
     const put = await request
-      .put(`${url}${(post.body as RecipeDto)._id}`)
+      .put(`${url}${(post.body as RecipeResponseDto)._id}`)
       .send(updated)
       .expect(200);
     expect(put.body.description).toBe(updated.description);
 
-    const get = await request.get(`${url}${(put.body as RecipeDto)._id}`).expect(200);
+    const get = await request.get(`${url}${(put.body as RecipeResponseDto)._id}`).expect(200);
     expect(get.body).toMatchObject(updated);
   });
 
   it('Deletes a recipe', async () => {
     const post = await postOne();
-    return request.del(`${url}${(post.body as RecipeDto)._id}`).expect(204);
+    return request.del(`${url}${(post.body as RecipeResponseDto)._id}`).expect(204);
   });
 
   // it('Responses with 404 if id is not found', async () => {

@@ -112,7 +112,7 @@ export default {
   // resolver: undefined,
 
   // Automatically restore mock state between every test
-  // restoreMocks: false,
+  restoreMocks: true,
 
   // The root directory that Jest should scan for tests and modules within
   // rootDir: undefined,

@@ -366,6 +366,10 @@ export interface Recipe {
   };
   dishTypes: RecipeDishType[];
   equipment: RecipeEquipment[];
+  page: {
+    id?: string;
+    pageType?: string;
+  };
   _id: mongoose.Types.ObjectId;
 }
 
@@ -417,5 +421,9 @@ export interface RecipeDocument extends mongoose.Document<mongoose.Types.ObjectI
   };
   dishTypes: mongoose.Types.DocumentArray<RecipeDishTypeDocument>;
   equipment: mongoose.Types.DocumentArray<RecipeEquipmentDocument>;
+  page: {
+    id?: string;
+    pageType?: string;
+  };
   _id: mongoose.Types.ObjectId;
 }

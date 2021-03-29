@@ -3,8 +3,9 @@ import mongoose from 'mongoose';
 import { nanoid } from 'nanoid';
 import scraper from 'website-scraper';
 import recipesRepo from './recipes.repo';
-import Recipe from './recipes.model';
-import { getHostname } from '../../common/utils';
+import Recipe, { PageType } from './recipes.model';
+import { addProtocol, getHostname } from '../../common/utils';
+import { RecipeDescription, RecipeRequestDto } from './recipe.dto';
 
 const getId = mongoose.Types.ObjectId;
 
@@ -13,7 +14,24 @@ class RecipesService {
 
   getById = (id: string): Promise<RecipeDocument | null> => recipesRepo.getById(getId(id));
 
-  add = (recipe: RecipeDocument): Promise<RecipeDocument> => recipesRepo.add(new Recipe(recipe));
+  async add(recipeDto: RecipeRequestDto): Promise<RecipeDocument> {
+    let recipe: RecipeDescription = recipeDto;
+
+    if (recipeDto.pageUrl) {
+      const url = addProtocol(recipeDto.pageUrl);
+      const pageId = await this.saveExternalHTML(url);
+      recipe = {
+        ...recipeDto,
+        page: {
+          id: pageId,
+          pageType: PageType.EXTERNAL,
+        },
+      };
+      delete recipe.pageUrl;
+    }
+
+    return await recipesRepo.add(new Recipe(recipe));
+  }
 
   upd = (id: string, recipe: RecipeDocument): Promise<RecipeDocument | null> =>
     recipesRepo.upd(getId(id), recipe);

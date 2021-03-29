@@ -1,6 +1,6 @@
-import { RecipeDto } from '../recipe.dto';
+import { RecipeRequestDto } from '../recipe.dto';
 
-export const getRecipeData = (): RecipeDto => ({
+export const getRecipeData = (mergeObj?: Partial<RecipeRequestDto>): RecipeRequestDto => ({
   name: 'Blinchiki',
   description: 'Mmm',
   time: 20,
@@ -21,4 +21,5 @@ export const getRecipeData = (): RecipeDto => ({
   },
   dishTypes: [{ id: '604bdc0e9d07d51b052f872f' }],
   equipment: [{ id: '604bdc0e9d07d51b052f872a' }],
+  ...mergeObj,
 });

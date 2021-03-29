@@ -3,7 +3,7 @@ import { DeepPartial } from 'src/common/types';
 import { longStr } from '../../../common/utils';
 import Recipe from '../recipes.model';
 import { getRecipeData } from './helpers';
-import { RecipeDto } from '../recipe.dto';
+import { RecipeDescription } from '../recipe.dto';
 
 describe('Recipe Model Test', () => {
   it('creates and saves recipe', async () => {
@@ -17,7 +17,7 @@ describe('Recipe Model Test', () => {
 
   it('fails saving if required field is not provided', () => {
     expect.assertions(3);
-    const incorrect: DeepPartial<RecipeDto> = { ...getRecipeData() };
+    const incorrect: DeepPartial<RecipeDescription> = { ...getRecipeData() };
     delete incorrect.name;
     delete incorrect.ingredients?.[0]?.id;
     const recipe = new Recipe(incorrect);

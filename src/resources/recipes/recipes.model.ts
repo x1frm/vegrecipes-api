@@ -4,6 +4,11 @@ import { objectIdGetter } from '../../common/model.utils';
 
 mongoose.SchemaTypes.ObjectId.get(objectIdGetter);
 
+export enum PageType {
+  EXTERNAL = 'EXTERNAL',
+  USER_DEFINED = 'USER_DEFINED',
+}
+
 const recipeIngredientSchema = new mongoose.Schema(
   {
     id: {
@@ -83,6 +88,13 @@ const recipeSchema: RecipeSchema = new mongoose.Schema({
   },
   dishTypes: [recipeDishTypeSchema],
   equipment: [recipeEquipmentSchema],
+  page: {
+    id: String,
+    pageType: {
+      type: String,
+      enum: PageType,
+    },
+  },
 });
 
 recipeEquipmentSchema.set('toObject', { getters: true });

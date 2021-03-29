@@ -45,3 +45,26 @@ describe('getHostname', () => {
     });
   });
 });
+
+describe('addProtocol', () => {
+  it('adds a protocol to url if needed', () => {
+    const urls = [
+      'support.google.com/analytics/answer/1033867?hl=en',
+      'https://laravel.com/docs/8.x/urls',
+      'http://example.com?param=value',
+      'websitename.com:1234/dir/file.txt',
+    ];
+
+    const expected = [
+      'https://support.google.com/analytics/answer/1033867?hl=en',
+      'https://laravel.com/docs/8.x/urls',
+      'http://example.com?param=value',
+      'https://websitename.com:1234/dir/file.txt',
+    ];
+
+    urls.forEach((url, idx) => {
+      const received = utils.addProtocol(url);
+      expect(received).toBe(expected[idx]);
+    });
+  });
+});

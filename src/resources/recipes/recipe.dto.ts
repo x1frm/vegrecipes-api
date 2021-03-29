@@ -1,4 +1,6 @@
-export interface RecipeDto {
+import { PageType } from './recipes.model';
+
+export interface RecipeRequestDto {
   name: string;
   description?: string;
   ingredients: RecipeIngredientDto[];
@@ -10,8 +12,22 @@ export interface RecipeDto {
   };
   dishTypes: RecipeDishTypeDto[];
   equipment: RecipeEquipmentDto[];
-  _id?: string;
+  pageUrl?: string;
+  pageHTML?: string;
 }
+
+export interface RecipeDescription extends RecipeRequestDto {
+  page?: {
+    id?: string;
+    pageType: PageType;
+  };
+}
+
+export interface RecipeResponseDto extends RecipeDescription {
+  _id: string;
+}
+
+export type RecipePatchDto = Partial<RecipeRequestDto>;
 
 export interface RecipeIngredientDto {
   id: string;
