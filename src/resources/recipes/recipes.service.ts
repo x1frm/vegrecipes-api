@@ -21,7 +21,18 @@ class RecipesService {
   }
 
   async upd(id: string, recipeDto: RecipeRequestDto): Promise<RecipeDocument | null> {
-    const recipe = await this.savePage(recipeDto);
+    let recipe: RecipeDescription = recipeDto;
+
+    const isURLchanged = async () => {
+      if (!recipeDto.pageUrl) return false;
+
+      const oldRecipe = await this.getById(id);
+      return oldRecipe?.page?.url !== recipeDto.pageUrl;
+    };
+
+    if (recipeDto.pageHTML || (await isURLchanged())) {
+      recipe = await this.savePage(recipeDto);
+    }
 
     return await recipesRepo.upd(id, recipe);
   }
@@ -39,6 +50,7 @@ class RecipesService {
         page: {
           id: pageId,
           pageType: PageType.EXTERNAL,
+          url,
         },
       };
       recipe = recipeExternal;

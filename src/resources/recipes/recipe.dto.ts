@@ -3,15 +3,15 @@ import { RecipeObject } from '../../interfaces/mongoose';
 export interface RecipeRequestDto {
   name: string;
   description?: string;
-  ingredients: RecipeIngredientDto[];
+  ingredients?: RecipeIngredientDto[];
   time?: number;
   nutrition?: {
     fat?: number;
     protein?: number;
     carbohydrates?: number;
   };
-  dishTypes: RecipeDishTypeDto[];
-  equipment: RecipeEquipmentDto[];
+  dishTypes?: RecipeDishTypeDto[];
+  equipment?: RecipeEquipmentDto[];
   pageUrl?: string;
   pageHTML?: string;
 }

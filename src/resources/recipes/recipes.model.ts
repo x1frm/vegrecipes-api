@@ -90,6 +90,7 @@ const recipeSchema: RecipeSchema = new mongoose.Schema({
   equipment: [recipeEquipmentSchema],
   page: {
     id: String,
+    url: String,
     pageType: {
       type: String,
       enum: PageType,

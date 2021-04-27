@@ -108,6 +108,7 @@ export interface RecipeObject {
   equipment: RecipeEquipmentObject[];
   page: {
     id?: string;
+    url?: string;
     pageType?: string;
   };
   _id: string;
@@ -175,17 +176,18 @@ export interface RecipeEquipmentDocument
 export interface RecipeDescription {
   name: string;
   description?: string;
-  ingredients: RecipeIngredientDescription[];
+  ingredients?: RecipeIngredientDescription[];
   time?: number;
   nutrition?: {
     fat?: number;
     protein?: number;
     carbohydrates?: number;
   };
-  dishTypes: RecipeDishTypeDescription[];
-  equipment: RecipeEquipmentDescription[];
+  dishTypes?: RecipeDishTypeDescription[];
+  equipment?: RecipeEquipmentDescription[];
   page?: {
     id?: string;
+    url?: string;
     pageType?: string;
   };
 }

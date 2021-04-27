@@ -57,3 +57,9 @@ export const mockSaveExtHtml = (): jest.SpyInstance =>
     .spyOn(recipesService, 'saveExternalHTML')
     .mockImplementation()
     .mockReturnValue(Promise.resolve('aaabbbcccddd'));
+
+export const mockSavePage = (): jest.SpyInstance =>
+  jest
+    .spyOn(recipesService, 'savePage')
+    .mockImplementation()
+    .mockReturnValue(Promise.resolve(getRecipeRequestData()));
