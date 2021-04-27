@@ -15,6 +15,20 @@ class RecipesService {
   getById = (id: string): Promise<RecipeDocument | null> => recipesRepo.getById(getId(id));
 
   async add(recipeDto: RecipeRequestDto): Promise<RecipeDocument> {
+    const recipe = await this.savePage(recipeDto);
+
+    return await recipesRepo.add(new Recipe(recipe));
+  }
+
+  async upd(id: string, recipeDto: RecipeRequestDto): Promise<RecipeDocument | null> {
+    const recipe = await this.savePage(recipeDto);
+
+    return await recipesRepo.upd(id, recipe);
+  }
+
+  del = (id: string): Promise<RecipeDocument | null> => recipesRepo.del(getId(id));
+
+  async savePage(recipeDto: RecipeRequestDto): Promise<RecipeDescription> {
     let recipe;
 
     if (recipeDto.pageUrl) {
@@ -32,14 +46,8 @@ class RecipesService {
       recipe = recipeDto;
     }
 
-    return await recipesRepo.add(new Recipe(recipe));
+    return recipe;
   }
-
-  async upd(id: string, recipe: RecipeRequestDto): Promise<RecipeDocument | null> {
-    return await recipesRepo.upd(id, recipe);
-  }
-
-  del = (id: string): Promise<RecipeDocument | null> => recipesRepo.del(getId(id));
 
   async saveExternalHTML(url: string): Promise<string> {
     const id = nanoid(12);

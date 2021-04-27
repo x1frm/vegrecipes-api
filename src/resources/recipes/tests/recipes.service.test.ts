@@ -5,6 +5,12 @@ import { getRecipeRequestData } from './helpers';
 
 const url = 'https://eda.ru/recepty/osnovnye-blyuda/bulgur-s-tikvoj-52694';
 
+const makeSaveExtHtmlMock = () =>
+  jest
+    .spyOn(recipesService, 'saveExternalHTML')
+    .mockImplementation()
+    .mockReturnValue(Promise.resolve('aaabbbcccddd'));
+
 // describe('saveExternalHTML method', () => {
 //   it('Saves external recipe from URL to a local file', async () => {
 //     expect.assertions(2);
@@ -23,19 +29,35 @@ const url = 'https://eda.ru/recepty/osnovnye-blyuda/bulgur-s-tikvoj-52694';
 //   });
 // });
 
-describe('Recipes Service basic CRUD methods', () => {
-  const makeMock = () =>
-    jest
-      .spyOn(recipesService, 'saveExternalHTML')
-      .mockImplementation()
-      .mockReturnValue(Promise.resolve('aaabbbcccddd'));
+describe('Recipes Service', () => {
+  const recipe = getRecipeRequestData({ pageUrl: url });
 
+  describe('savePage method', () => {
+    it('Calls saveExternalHTML when pageUrl is provided and returns RecipeDescription', async () => {
+      expect.assertions(4);
+      const saveExternalHTML = makeSaveExtHtmlMock();
+
+      const recipeDesc = await recipesService.savePage(recipe);
+
+      expect(saveExternalHTML).toHaveBeenCalledTimes(1);
+      expect(saveExternalHTML).toHaveBeenCalledWith(recipe.pageUrl);
+      expect(recipeDesc.page?.id).toHaveLength(12);
+      expect(recipeDesc.page?.pageType).toBe(PageType.EXTERNAL);
+    });
+
+    // it('fails if no pageUrl or pageHTML is provided', async () => {
+
+    // })
+  });
+});
+
+describe('Recipes Service basic CRUD methods', () => {
   describe('with external page url provided', () => {
     const recipe = getRecipeRequestData({ pageUrl: url });
 
     it('calls a saveExternalHTML from "add" method', async () => {
       expect.assertions(3);
-      const saveExternalHTML = makeMock();
+      const saveExternalHTML = makeSaveExtHtmlMock();
 
       const recipeDoc = await recipesService.add(recipe);
 
@@ -50,7 +72,7 @@ describe('Recipes Service basic CRUD methods', () => {
 
     it('does not call a saveExternalHTML from "add" method', async () => {
       expect.assertions(3);
-      const saveExternalHTML = makeMock();
+      const saveExternalHTML = makeSaveExtHtmlMock();
 
       const recipeDoc = await recipesService.add(recipe);
 
