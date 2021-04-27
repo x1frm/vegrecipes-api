@@ -2,6 +2,7 @@ import { RecipeDocument, RecipeDescription } from 'src/interfaces/mongoose';
 import mongoose from 'mongoose';
 import { nanoid } from 'nanoid';
 import scraper from 'website-scraper';
+import { writeFile } from 'fs/promises';
 import recipesRepo from './recipes.repo';
 import Recipe, { PageType } from './recipes.model';
 import { addProtocol, getHostname } from '../../common/utils';
@@ -53,9 +54,19 @@ class RecipesService {
           url,
         },
       };
+
       recipe = recipeExternal;
     } else if (recipeDto.pageHTML) {
-      recipe = recipeDto;
+      const pageId = await this.saveUserHTML(recipeDto.pageHTML);
+      const { pageUrl, pageHTML, ...userRecipe } = {
+        ...recipeDto,
+        page: {
+          id: pageId,
+          pageType: PageType.USER_DEFINED,
+        },
+      };
+
+      recipe = userRecipe;
     } else {
       throw new Error('Page URL or HTML is required');
     }
@@ -88,6 +99,13 @@ class RecipesService {
       },
     });
 
+    return id;
+  }
+
+  async saveUserHTML(html: string): Promise<string> {
+    const id = nanoid(12);
+
+    await writeFile(`data/user-recipes/${id}.html`, html);
     return id;
   }
 }

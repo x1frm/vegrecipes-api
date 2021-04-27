@@ -2,6 +2,7 @@ import mockHttp from '../../../../test/helpers/mock-http';
 import { clearDatabase } from '../../../../test/setup/db';
 import { RecipeRequestDto, RecipeResponseDto } from '../recipe.dto';
 import recipesController from '../recipes.controller';
+import recipesService from '../recipes.service';
 import { getRecipeRequestData, getRecipeResponseData, mockSaveExtHtml } from './helpers';
 
 const url = '/api/recipes/';
@@ -18,6 +19,7 @@ const postOne = async (item: RecipeRequestDto = recipe) => {
 describe('/recipes/', () => {
   beforeEach(() => {
     mockSaveExtHtml();
+    jest.spyOn(recipesService, 'saveUserHTML').mockImplementation();
   });
   afterEach(clearDatabase);
 

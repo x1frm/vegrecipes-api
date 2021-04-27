@@ -9,6 +9,11 @@ import {
   mockSavePage,
 } from './helpers';
 
+beforeEach(() => {
+  jest.spyOn(recipesService, 'saveUserHTML').mockImplementation();
+  mockSaveExtHtml();
+});
+
 const url = getRecipeRequestData().pageUrl;
 
 const addOne = async (mergeObj?: Partial<RecipeRequestDto>) =>
@@ -62,23 +67,30 @@ describe('Recipes Service', () => {
     it('Writes page info into description object', async () => {
       expect.assertions(3);
 
-      mockSaveExtHtml();
-
       const recipeDesc = await recipesService.savePage(recipe);
 
       expect(recipeDesc.page?.id).toHaveLength(12);
       expect(recipeDesc.page?.pageType).toBe(PageType.EXTERNAL);
       expect(recipeDesc.page?.url).toBe(url);
     });
+
+    it('Calls saveUserHTML when pageHtml is provided and returns RecipeDescription', async () => {
+      expect.assertions(3);
+
+      const saveUserHTML = jest.spyOn(recipesService, 'saveUserHTML').mockImplementation();
+      const recipe2 = getRecipeRequestData({ pageUrl: undefined, pageHTML: '<div></div>' });
+
+      const recipeDesc = await recipesService.savePage(recipe2);
+
+      expect(saveUserHTML).toHaveBeenCalledTimes(1);
+      expect(saveUserHTML).toHaveBeenCalledWith(recipe2.pageHTML);
+      expect(recipeDesc).toMatchObject(getRecipeResponseData());
+    });
   });
 });
 
 describe('Recipes Service basic CRUD methods', () => {
   describe('UPD', () => {
-    beforeEach(() => {
-      mockSaveExtHtml();
-    });
-
     it('doesnt call savePage if pageURL is not changed', async () => {
       expect.assertions(2);
 
@@ -133,24 +145,27 @@ describe('Recipes Service basic CRUD methods', () => {
       expect(updated?.toObject()).toMatchObject(getRecipeResponseData());
     });
 
-    // it('completely replaces old object', async () => {
-    //   expect.assertions(3);
+    it('completely replaces old object', async () => {
+      expect.assertions(3);
 
-    //   const updatedDesc: RecipeRequestDto = {
-    //     name: 'BrandNew',
-    //     pageHTML: '<div></div>',
-    //   };
-    //   const recipe = await addOne();
-    //   const expected = {
-    //     name: updatedDesc.name,
-    //   };
+      const recipe = await addOne();
+      const updatedDesc: RecipeRequestDto = {
+        name: 'BrandNew',
+        pageHTML: '<div></div>',
+      };
+      const expected = {
+        name: updatedDesc.name,
+        page: {
+          pageType: PageType.USER_DEFINED,
+        },
+      };
 
-    //   const updated = await recipesService.upd(recipe.id, updatedDesc);
+      const updated = await recipesService.upd(recipe.id, updatedDesc);
 
-    //   expect(updated?.toObject()).toMatchObject(expected);
-    //   expect(updated?.page?.url).not.toBeDefined();
-    //   expect(updated?.description).not.toBeDefined();
-    // });
+      expect(updated?.toObject()).toMatchObject(expected);
+      expect(updated?.page?.url).not.toBeDefined();
+      expect(updated?.description).not.toBeDefined();
+    });
   });
 
   describe('ADD', () => {
@@ -188,7 +203,7 @@ describe('Recipes Service basic CRUD methods', () => {
 
         expect(saveExternalHTML).not.toHaveBeenCalled();
         expect(recipeDoc.page?.id).not.toBeDefined();
-        expect(recipeDoc.page?.pageType).not.toBeDefined();
+        expect(recipeDoc.page?.url).not.toBeDefined();
       });
     });
   });

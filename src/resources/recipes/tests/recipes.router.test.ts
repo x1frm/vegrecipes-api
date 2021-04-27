@@ -2,6 +2,7 @@ import supertest from 'supertest';
 import { clearDatabase } from '../../../../test/setup/db';
 import app from '../../../app';
 import { RecipeRequestDto, RecipeResponseDto } from '../recipe.dto';
+import recipesService from '../recipes.service';
 import { getRecipeRequestData, mockSaveExtHtml, getRecipeResponseData } from './helpers';
 
 const request = supertest(app);
@@ -14,6 +15,7 @@ const postOne = (item: RecipeRequestDto = recipe) => request.post(url).send(item
 describe('/recipes/', () => {
   beforeEach(() => {
     mockSaveExtHtml();
+    jest.spyOn(recipesService, 'saveUserHTML').mockImplementation();
   });
   afterEach(clearDatabase);
 
