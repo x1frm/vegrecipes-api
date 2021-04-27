@@ -29,7 +29,7 @@ class RecipesService {
   del = (id: string): Promise<RecipeDocument | null> => recipesRepo.del(getId(id));
 
   async savePage(recipeDto: RecipeRequestDto): Promise<RecipeDescription> {
-    let recipe;
+    let recipe: RecipeDescription;
 
     if (recipeDto.pageUrl) {
       const url = addProtocol(recipeDto.pageUrl);
@@ -41,9 +41,11 @@ class RecipesService {
           pageType: PageType.EXTERNAL,
         },
       };
-      recipe = recipeExternal as RecipeDescription;
-    } else {
+      recipe = recipeExternal;
+    } else if (recipeDto.pageHTML) {
       recipe = recipeDto;
+    } else {
+      throw new Error('Page URL or HTML is required');
     }
 
     return recipe;

@@ -1,15 +1,9 @@
 import { readFile } from 'fs';
 import { PageType } from '../recipes.model';
 import recipesService from '../recipes.service';
-import { getRecipeRequestData } from './helpers';
+import { getRecipeRequestData, mockSaveExtHtml } from './helpers';
 
 const url = 'https://eda.ru/recepty/osnovnye-blyuda/bulgur-s-tikvoj-52694';
-
-const makeSaveExtHtmlMock = () =>
-  jest
-    .spyOn(recipesService, 'saveExternalHTML')
-    .mockImplementation()
-    .mockReturnValue(Promise.resolve('aaabbbcccddd'));
 
 // describe('saveExternalHTML method', () => {
 //   it('Saves external recipe from URL to a local file', async () => {
@@ -35,7 +29,7 @@ describe('Recipes Service', () => {
   describe('savePage method', () => {
     it('Calls saveExternalHTML when pageUrl is provided and returns RecipeDescription', async () => {
       expect.assertions(4);
-      const saveExternalHTML = makeSaveExtHtmlMock();
+      const saveExternalHTML = mockSaveExtHtml();
 
       const recipeDesc = await recipesService.savePage(recipe);
 
@@ -45,9 +39,17 @@ describe('Recipes Service', () => {
       expect(recipeDesc.page?.pageType).toBe(PageType.EXTERNAL);
     });
 
-    // it('fails if no pageUrl or pageHTML is provided', async () => {
+    it('fails if no pageUrl or pageHTML is provided', async () => {
+      expect.assertions(2);
 
-    // })
+      const incorrect = getRecipeRequestData({ pageUrl: undefined });
+      const saveExternalHTML = mockSaveExtHtml();
+
+      const promise = recipesService.savePage(incorrect);
+
+      await expect(promise).rejects.toThrow();
+      expect(saveExternalHTML).not.toHaveBeenCalled();
+    });
   });
 });
 
@@ -57,7 +59,7 @@ describe('Recipes Service basic CRUD methods', () => {
 
     it('calls a saveExternalHTML from "add" method', async () => {
       expect.assertions(3);
-      const saveExternalHTML = makeSaveExtHtmlMock();
+      const saveExternalHTML = mockSaveExtHtml();
 
       const recipeDoc = await recipesService.add(recipe);
 
@@ -68,11 +70,11 @@ describe('Recipes Service basic CRUD methods', () => {
   });
 
   describe('with no external page url provided', () => {
-    const recipe = getRecipeRequestData();
+    const recipe = getRecipeRequestData({ pageUrl: undefined, pageHTML: '<div></div>' });
 
     it('does not call a saveExternalHTML from "add" method', async () => {
       expect.assertions(3);
-      const saveExternalHTML = makeSaveExtHtmlMock();
+      const saveExternalHTML = mockSaveExtHtml();
 
       const recipeDoc = await recipesService.add(recipe);
 

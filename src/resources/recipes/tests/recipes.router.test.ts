@@ -2,15 +2,19 @@ import supertest from 'supertest';
 import { clearDatabase } from '../../../../test/setup/db';
 import app from '../../../app';
 import { RecipeRequestDto, RecipeResponseDto } from '../recipe.dto';
-import { getRecipeRequestData } from './helpers';
+import { getRecipeRequestData, mockSaveExtHtml, getRecipeResponseData } from './helpers';
 
 const request = supertest(app);
 const url = '/api/recipes/';
 
 const recipe = getRecipeRequestData();
+const recipeRes = getRecipeResponseData();
 const postOne = (item: RecipeRequestDto = recipe) => request.post(url).send(item).expect(200);
 
 describe('/recipes/', () => {
+  beforeEach(() => {
+    mockSaveExtHtml();
+  });
   afterEach(clearDatabase);
 
   it('Gets empty array when no recipes were added yet', async () =>
@@ -18,25 +22,27 @@ describe('/recipes/', () => {
 
   it('Gets all recipes', async () => {
     expect.assertions(1);
-    const pancakes = {
-      ...getRecipeRequestData(),
+    const pancakes = getRecipeRequestData({
       name: 'Pancakes',
-    };
+    });
+    const pancakesRes = getRecipeResponseData({
+      name: 'Pancakes',
+    });
     await postOne();
     await postOne(pancakes);
 
     const get = await request.get(url).expect(200);
-    expect(get.body).toMatchObject([recipe, pancakes]);
+    expect(get.body).toMatchObject([recipeRes, pancakesRes]);
   });
 
   it('Post a single recipe and gets it back', async () => {
     expect.assertions(2);
 
     const post = await postOne();
-    expect(post.body).toMatchObject(recipe);
+    expect(post.body).toMatchObject(recipeRes);
 
     const get = await request.get(url).expect(200);
-    expect(get.body).toMatchObject([recipe]);
+    expect(get.body).toMatchObject([recipeRes]);
   });
 
   it('Gets a recipe by id', async () => {
@@ -45,15 +51,15 @@ describe('/recipes/', () => {
     const post = await postOne();
 
     const get = await request.get(`${url}${(post.body as RecipeResponseDto)._id}`).expect(200);
-    expect(get.body).toMatchObject(recipe);
+    expect(get.body).toMatchObject(recipeRes);
   });
 
   it('Puts a recipe', async () => {
     expect.assertions(2);
     const post = await postOne();
 
-    const updated = getRecipeRequestData();
-    updated.description = 'Tasty breakfast';
+    const updated = getRecipeRequestData({ description: 'Tasty breakfast' });
+    const updatedRes = getRecipeResponseData({ description: 'Tasty breakfast' });
 
     const put = await request
       .put(`${url}${(post.body as RecipeResponseDto)._id}`)
@@ -62,7 +68,7 @@ describe('/recipes/', () => {
     expect(put.body.description).toBe(updated.description);
 
     const get = await request.get(`${url}${(put.body as RecipeResponseDto)._id}`).expect(200);
-    expect(get.body).toMatchObject(updated);
+    expect(get.body).toMatchObject(updatedRes);
   });
 
   it('Deletes a recipe', async () => {
