@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { IngredientDocument, IngredientModel, IngredientSchema } from 'src/interfaces/mongoose.gen';
+import { IngredientDocument, IngredientModel, IngredientSchema } from 'src/interfaces/mongoose';
 import { getUniqueValidator, nameSetter } from '../../common/model.utils';
 
 const ingredientSchema: IngredientSchema = new mongoose.Schema({

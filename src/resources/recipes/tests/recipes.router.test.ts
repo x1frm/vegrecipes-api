@@ -2,12 +2,12 @@ import supertest from 'supertest';
 import { clearDatabase } from '../../../../test/setup/db';
 import app from '../../../app';
 import { RecipeRequestDto, RecipeResponseDto } from '../recipe.dto';
-import { getRecipeData } from './helpers';
+import { getRecipeRequestData } from './helpers';
 
 const request = supertest(app);
 const url = '/api/recipes/';
 
-const recipe = getRecipeData();
+const recipe = getRecipeRequestData();
 const postOne = (item: RecipeRequestDto = recipe) => request.post(url).send(item).expect(200);
 
 describe('/recipes/', () => {
@@ -19,7 +19,7 @@ describe('/recipes/', () => {
   it('Gets all recipes', async () => {
     expect.assertions(1);
     const pancakes = {
-      ...getRecipeData(),
+      ...getRecipeRequestData(),
       name: 'Pancakes',
     };
     await postOne();
@@ -52,7 +52,7 @@ describe('/recipes/', () => {
     expect.assertions(2);
     const post = await postOne();
 
-    const updated = getRecipeData();
+    const updated = getRecipeRequestData();
     updated.description = 'Tasty breakfast';
 
     const put = await request

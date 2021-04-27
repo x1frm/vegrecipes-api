@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { DishTypeDocument, DishTypeModel, DishTypeSchema } from 'src/interfaces/mongoose.gen';
+import { DishTypeDocument, DishTypeModel, DishTypeSchema } from 'src/interfaces/mongoose';
 import { getUniqueValidator, nameSetter } from '../../common/model.utils';
 
 const dishTypeSchema: DishTypeSchema = new mongoose.Schema({

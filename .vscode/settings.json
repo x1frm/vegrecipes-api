@@ -1,12 +1,4 @@
 {
-    "emeraldwalk.runonsave": {
-        "commands": [
-            {
-                "match": "\\.model.ts$",
-                "cmd": "npm run mt"
-            }
-        ]
-    },
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true,
         "source.fixAll.stylelint": true

@@ -10,6 +10,8 @@ export const clearDatabase = async (): Promise<
 };
 
 export const dbInit = (): void => {
+  mongoose.set('returnOriginal', false);
+
   mongoose.connect(
     process.env.MONGO_URL as string,
     {

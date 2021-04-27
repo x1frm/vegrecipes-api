@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
-import { Equipment as IEquipment } from 'src/interfaces/mongoose.gen';
+import { EquipmentObject as IEquipment } from 'src/interfaces/mongoose';
 import { longStr } from '../../common/utils';
 import Equipment from './equipment.model';
 

@@ -2,11 +2,11 @@ import mockHttp from '../../../../test/helpers/mock-http';
 import { clearDatabase } from '../../../../test/setup/db';
 import { RecipeRequestDto, RecipeResponseDto } from '../recipe.dto';
 import recipesController from '../recipes.controller';
-import { getRecipeData } from './helpers';
+import { getRecipeRequestData } from './helpers';
 
 const url = '/api/recipes/';
 
-const recipe = getRecipeData();
+const recipe = getRecipeRequestData();
 const postOne = async (item: RecipeRequestDto = recipe) => {
   const mock = mockHttp.post(url, item);
   await recipesController.add(...mock.mock);
@@ -31,7 +31,7 @@ describe('/recipes/', () => {
     expect.assertions(2);
 
     const pancakes = {
-      ...getRecipeData(),
+      ...getRecipeRequestData(),
       name: 'Pancakes',
     };
     await postOne();
@@ -75,7 +75,7 @@ describe('/recipes/', () => {
     expect.assertions(4);
 
     const post = await postOne();
-    const updated = getRecipeData();
+    const updated = getRecipeRequestData();
     updated.description = 'Tasty breakfast';
     const postId = (post.body as RecipeResponseDto)._id;
     const put = mockHttp.put(`${url}${postId}`, updated).params({ id: postId });

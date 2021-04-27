@@ -1,6 +1,6 @@
 import { RecipeRequestDto } from '../recipe.dto';
 
-export const getRecipeData = (mergeObj?: Partial<RecipeRequestDto>): RecipeRequestDto => ({
+export const getRecipeRequestData = (mergeObj?: Partial<RecipeRequestDto>): RecipeRequestDto => ({
   name: 'Blinchiki',
   description: 'Mmm',
   time: 20,

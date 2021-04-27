@@ -356,6 +356,21 @@
               },
               "required": []
             }
+          },
+          "page": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "pageType": {
+                "type": "string",
+                "enum": {
+                  "EXTERNAL": "EXTERNAL",
+                  "USER_DEFINED": "USER_DEFINED"
+                }
+              }
+            }
           }
         }
       }

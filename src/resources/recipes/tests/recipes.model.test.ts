@@ -1,23 +1,23 @@
 import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
+import { RecipeDescription } from 'src/interfaces/mongoose';
 import { longStr } from '../../../common/utils';
 import Recipe from '../recipes.model';
-import { getRecipeData } from './helpers';
-import { RecipeDescription } from '../recipe.dto';
+import { getRecipeRequestData } from './helpers';
 
 describe('Recipe Model Test', () => {
   it('creates and saves recipe', async () => {
     expect.assertions(3);
-    const recipe = new Recipe(getRecipeData());
+    const recipe = new Recipe(getRecipeRequestData());
     const result = await recipe.save();
     expect(result._id).toBeDefined();
     expect(result.isNew).toBe(false);
-    expect(result.toObject()).toMatchObject(getRecipeData());
+    expect(result.toObject()).toMatchObject(getRecipeRequestData());
   });
 
   it('fails saving if required field is not provided', () => {
     expect.assertions(3);
-    const incorrect: DeepPartial<RecipeDescription> = { ...getRecipeData() };
+    const incorrect: DeepPartial<RecipeDescription> = { ...getRecipeRequestData() };
     delete incorrect.name;
     delete incorrect.ingredients?.[0]?.id;
     const recipe = new Recipe(incorrect);
@@ -33,7 +33,7 @@ describe('Recipe Model Test', () => {
     expect.assertions(8);
 
     const incorrect = {
-      ...getRecipeData(),
+      ...getRecipeRequestData(),
       name: longStr(101),
       description: longStr(1001),
       ingredients: [

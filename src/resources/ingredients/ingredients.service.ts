@@ -1,4 +1,4 @@
-import { IngredientDocument } from 'src/interfaces/mongoose.gen';
+import { IngredientDocument } from 'src/interfaces/mongoose';
 import mongoose from 'mongoose';
 import ingredientsRepo from './ingredients.repo';
 import Ingredient from './ingredients.model';

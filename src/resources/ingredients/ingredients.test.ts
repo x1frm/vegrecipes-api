@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
-import { Ingredient as IIngredient } from 'src/interfaces/mongoose.gen';
+import { IngredientObject as IIngredient } from 'src/interfaces/mongoose';
 import { longStr } from '../../common/utils';
 import Ingredient from './ingredients.model';
 

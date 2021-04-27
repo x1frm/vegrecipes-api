@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { RecipeDocument, RecipeModel, RecipeSchema } from 'src/interfaces/mongoose.gen';
+import { RecipeDocument, RecipeModel, RecipeSchema } from 'src/interfaces/mongoose';
 import { objectIdGetter } from '../../common/model.utils';
 
 mongoose.SchemaTypes.ObjectId.get(objectIdGetter);

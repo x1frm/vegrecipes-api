@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { EquipmentDocument, EquipmentModel, EquipmentSchema } from 'src/interfaces/mongoose.gen';
+import { EquipmentDocument, EquipmentModel, EquipmentSchema } from 'src/interfaces/mongoose';
 import { getUniqueValidator, nameSetter } from '../../common/model.utils';
 
 const equipmentSchema: EquipmentSchema = new mongoose.Schema({

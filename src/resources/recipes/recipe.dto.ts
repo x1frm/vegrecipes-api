@@ -1,11 +1,11 @@
-import { PageType } from './recipes.model';
+import { RecipeObject } from '../../interfaces/mongoose';
 
 export interface RecipeRequestDto {
   name: string;
   description?: string;
   ingredients: RecipeIngredientDto[];
   time?: number;
-  nutrition: {
+  nutrition?: {
     fat?: number;
     protein?: number;
     carbohydrates?: number;
@@ -16,18 +16,7 @@ export interface RecipeRequestDto {
   pageHTML?: string;
 }
 
-export interface RecipeDescription extends RecipeRequestDto {
-  page?: {
-    id?: string;
-    pageType: PageType;
-  };
-}
-
-export interface RecipeResponseDto extends RecipeDescription {
-  _id: string;
-}
-
-export type RecipePatchDto = Partial<RecipeRequestDto>;
+export type RecipeResponseDto = RecipeObject;
 
 export interface RecipeIngredientDto {
   id: string;

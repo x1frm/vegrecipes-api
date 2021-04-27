@@ -1,4 +1,4 @@
-import { RecipeDocument } from 'src/interfaces/mongoose.gen';
+import { RecipeDocument, RecipeDescription } from 'src/interfaces/mongoose';
 import Recipe from './recipes.model';
 
 export default {
@@ -17,11 +17,11 @@ export default {
     // } catch (e) {
     //   throw new Error(e);
     // }
-    return recipe.save();
+    return await recipe.save();
   },
 
-  async upd(id: RecipeDocument['_id'], recipe: RecipeDocument): Promise<RecipeDocument | null> {
-    return Recipe.findByIdAndUpdate(id, recipe, { new: true }).exec();
+  async upd(id: string, recipe: RecipeDescription): Promise<RecipeDocument | null> {
+    return await Recipe.findOneAndReplace({ _id: id }, recipe).exec();
   },
 
   async del(id: RecipeDocument['_id']): Promise<RecipeDocument | null> {

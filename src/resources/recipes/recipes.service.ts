@@ -1,11 +1,11 @@
-import { RecipeDocument } from 'src/interfaces/mongoose.gen';
+import { RecipeDocument, RecipeDescription } from 'src/interfaces/mongoose';
 import mongoose from 'mongoose';
 import { nanoid } from 'nanoid';
 import scraper from 'website-scraper';
 import recipesRepo from './recipes.repo';
 import Recipe, { PageType } from './recipes.model';
 import { addProtocol, getHostname } from '../../common/utils';
-import { RecipeDescription, RecipeRequestDto } from './recipe.dto';
+import { RecipeRequestDto } from './recipe.dto';
 
 const getId = mongoose.Types.ObjectId;
 
@@ -15,26 +15,29 @@ class RecipesService {
   getById = (id: string): Promise<RecipeDocument | null> => recipesRepo.getById(getId(id));
 
   async add(recipeDto: RecipeRequestDto): Promise<RecipeDocument> {
-    let recipe: RecipeDescription = recipeDto;
+    let recipe;
 
     if (recipeDto.pageUrl) {
       const url = addProtocol(recipeDto.pageUrl);
       const pageId = await this.saveExternalHTML(url);
-      recipe = {
+      const { pageUrl, pageHTML, ...recipeExternal } = {
         ...recipeDto,
         page: {
           id: pageId,
           pageType: PageType.EXTERNAL,
         },
       };
-      delete recipe.pageUrl;
+      recipe = recipeExternal as RecipeDescription;
+    } else {
+      recipe = recipeDto;
     }
 
     return await recipesRepo.add(new Recipe(recipe));
   }
 
-  upd = (id: string, recipe: RecipeDocument): Promise<RecipeDocument | null> =>
-    recipesRepo.upd(getId(id), recipe);
+  async upd(id: string, recipe: RecipeRequestDto): Promise<RecipeDocument | null> {
+    return await recipesRepo.upd(id, recipe);
+  }
 
   del = (id: string): Promise<RecipeDocument | null> => recipesRepo.del(getId(id));
 

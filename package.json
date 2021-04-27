@@ -7,6 +7,7 @@
     "start": "ts-node swagger/generate-swagger.js && nodemon src/server.ts",
     "test": "jest -o --runInBand --verbose",
     "test:debug": "DEBUG=vegrecipes* LOG_LEVEL=debug node -r ts-node/register --inspect node_modules/.bin/jest --runInBand -o",
+    "test:all": "jest --runInBand",
     "coverage": "jest --coverage",
     "build": "rm -rf dist && tsc --build tsconfig.prod.json",
     "lint": "eslint ./ --ignore-path .gitignore --ext .ts,.js",
