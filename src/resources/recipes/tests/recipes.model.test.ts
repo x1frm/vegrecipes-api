@@ -3,7 +3,7 @@ import { DeepPartial } from 'src/common/types';
 import { RecipeDescription } from 'src/interfaces/mongoose';
 import { longStr } from '../../../common/utils';
 import Recipe from '../recipes.model';
-import { getRecipeRequestData, getRecipeResponseData } from './helpers';
+import { getRecipeRequestData } from './helpers';
 
 describe('Recipe Model Test', () => {
   it('creates and saves recipe', async () => {
@@ -12,7 +12,7 @@ describe('Recipe Model Test', () => {
     const result = await recipe.save();
     expect(result._id).toBeDefined();
     expect(result.isNew).toBe(false);
-    expect(result.toObject()).toMatchObject(getRecipeResponseData());
+    expect(result.description).toBe(getRecipeRequestData().description);
   });
 
   it('fails saving if required field is not provided', () => {

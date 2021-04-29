@@ -24,15 +24,21 @@ class RecipesService {
   async upd(id: string, recipeDto: RecipeRequestDto): Promise<RecipeDocument | null> {
     let recipe: RecipeDescription = recipeDto;
 
-    const isURLchanged = async () => {
-      if (!recipeDto.pageUrl) return false;
-
-      const oldRecipe = await this.getById(id);
-      return oldRecipe?.page?.url !== recipeDto.pageUrl;
-    };
-
-    if (recipeDto.pageHTML || (await isURLchanged())) {
+    if (recipeDto.pageHTML) {
       recipe = await this.savePage(recipeDto);
+    } else if (!recipeDto.pageUrl) {
+      recipe = recipeDto;
+    } else {
+      const oldRecipe = await this.getById(id);
+
+      if (oldRecipe?.page?.url !== recipeDto.pageUrl) {
+        recipe = await this.savePage(recipeDto);
+      } else {
+        recipe = {
+          ...recipeDto,
+          page: oldRecipe.page,
+        };
+      }
     }
 
     return await recipesRepo.upd(id, recipe);

@@ -7,165 +7,341 @@ import {
   getRecipeResponseData,
   mockSaveExtHtml,
   mockSavePage,
+  pageId,
 } from './helpers';
 
 beforeEach(() => {
-  jest.spyOn(recipesService, 'saveUserHTML').mockImplementation();
+  jest
+    .spyOn(recipesService, 'saveUserHTML')
+    .mockImplementation()
+    .mockReturnValue(Promise.resolve(pageId));
   mockSaveExtHtml();
 });
 
 const url = getRecipeRequestData().pageUrl;
 
-const addOne = async (mergeObj?: Partial<RecipeRequestDto>) =>
-  await recipesService.add(getRecipeRequestData({ ...mergeObj }));
-
-// describe('saveExternalHTML method', () => {
-//   it('Saves external recipe from URL to a local file', async () => {
-//     expect.assertions(2);
-
-//     const id = await recipesService.saveExternalHTML(url);
-
-//     expect(id).toHaveLength(12);
-
-//     return new Promise((resolve, reject) => {
-//       readFile(`data/external-recipes/${id}/index.html`, 'utf-8', (err, data) => {
-//         if (err) reject(err);
-//         expect(data).toContain('Булгур с тыквой');
-//         resolve(0);
-//       });
-//     });
-//   });
-// });
+const addOne = async (...args: Parameters<typeof getRecipeRequestData>) =>
+  await recipesService.add(getRecipeRequestData(...args));
 
 describe('Recipes Service', () => {
   const recipe = getRecipeRequestData();
 
   describe('savePage method', () => {
-    it('Calls saveExternalHTML when pageUrl is provided and returns RecipeDescription', async () => {
-      expect.assertions(3);
-      const saveExternalHTML = mockSaveExtHtml();
+    describe('when pageUrl is provided', () => {
+      it('Calls saveExternalHTML', async () => {
+        expect.assertions(2);
+        const saveExternalHTML = mockSaveExtHtml();
 
-      const recipeDesc = await recipesService.savePage(recipe);
+        await recipesService.savePage(recipe);
 
-      expect(saveExternalHTML).toHaveBeenCalledTimes(1);
-      expect(saveExternalHTML).toHaveBeenCalledWith(recipe.pageUrl);
-      expect(recipeDesc).toMatchObject(getRecipeResponseData());
+        expect(saveExternalHTML).toHaveBeenCalledTimes(1);
+        expect(saveExternalHTML).toHaveBeenCalledWith(recipe.pageUrl);
+      });
+
+      it('Returns RecipeDescription', async () => {
+        expect.assertions(1);
+
+        const recipeDesc = await recipesService.savePage(recipe);
+
+        expect(recipeDesc).toMatchObject(getRecipeResponseData());
+      });
     });
 
-    it('fails if no pageUrl or pageHTML is provided', async () => {
-      expect.assertions(2);
+    describe('when no pageUrl or pageHTML is provided', () => {
+      it('throws an error', async () => {
+        expect.assertions(2);
 
-      const incorrect = getRecipeRequestData({ pageUrl: undefined });
-      const saveExternalHTML = mockSaveExtHtml();
+        const incorrect = getRecipeRequestData(undefined, ['pageUrl']);
+        const saveExternalHTML = mockSaveExtHtml();
 
-      const promise = recipesService.savePage(incorrect);
+        const promise = recipesService.savePage(incorrect);
 
-      await expect(promise).rejects.toThrow();
-      expect(saveExternalHTML).not.toHaveBeenCalled();
+        await expect(promise).rejects.toThrow();
+        expect(saveExternalHTML).not.toHaveBeenCalled();
+      });
     });
 
-    it('Writes page info into description object', async () => {
-      expect.assertions(3);
+    describe('When pageHtml is provided', () => {
+      it('Calls saveUserHTML', async () => {
+        expect.assertions(2);
 
-      const recipeDesc = await recipesService.savePage(recipe);
+        const saveUserHTML = jest.spyOn(recipesService, 'saveUserHTML').mockImplementation();
+        const recipe2 = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
 
-      expect(recipeDesc.page?.id).toHaveLength(12);
-      expect(recipeDesc.page?.pageType).toBe(PageType.EXTERNAL);
-      expect(recipeDesc.page?.url).toBe(url);
-    });
+        await recipesService.savePage(recipe2);
 
-    it('Calls saveUserHTML when pageHtml is provided and returns RecipeDescription', async () => {
-      expect.assertions(3);
+        expect(saveUserHTML).toHaveBeenCalledTimes(1);
+        expect(saveUserHTML).toHaveBeenCalledWith(recipe2.pageHTML);
+      });
 
-      const saveUserHTML = jest.spyOn(recipesService, 'saveUserHTML').mockImplementation();
-      const recipe2 = getRecipeRequestData({ pageUrl: undefined, pageHTML: '<div></div>' });
+      it('Returns RecipeDescription', async () => {
+        expect.assertions(1);
 
-      const recipeDesc = await recipesService.savePage(recipe2);
+        const id = 'qqqwwweeerrr';
+        jest
+          .spyOn(recipesService, 'saveUserHTML')
+          .mockImplementation()
+          .mockReturnValue(Promise.resolve(id));
+        const recipe2 = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
+        const expected = getRecipeResponseData(
+          {
+            page: {
+              id,
+              pageType: PageType.USER_DEFINED,
+            },
+          },
+          ['page']
+        );
 
-      expect(saveUserHTML).toHaveBeenCalledTimes(1);
-      expect(saveUserHTML).toHaveBeenCalledWith(recipe2.pageHTML);
-      expect(recipeDesc).toMatchObject(getRecipeResponseData());
+        const recipeDesc = await recipesService.savePage(recipe2);
+
+        expect(recipeDesc).toMatchObject(expected);
+      });
     });
   });
 });
 
 describe('Recipes Service basic CRUD methods', () => {
   describe('UPD', () => {
-    it('doesnt call savePage if pageURL is not changed', async () => {
-      expect.assertions(2);
+    describe('When pageUrl is provided, but not changed', () => {
+      it('Does not call savePage', async () => {
+        expect.assertions(1);
 
-      const recipe = await addOne();
-      const savePage = mockSavePage();
+        const recipe = await addOne();
+        const savePage = mockSavePage();
 
-      const updated = await recipesService.upd(recipe.id, getRecipeRequestData());
+        await recipesService.upd(recipe.id, getRecipeRequestData());
 
-      expect(savePage).not.toHaveBeenCalled();
-      expect(updated?.toObject()).toMatchObject(getRecipeResponseData());
+        expect(savePage).not.toHaveBeenCalled();
+      });
+
+      it('Returns correct RecipeDocument', async () => {
+        expect.assertions(1);
+
+        const recipe = await addOne();
+
+        const updated = await recipesService.upd(recipe.id, getRecipeRequestData());
+
+        expect(updated?.toObject()).toMatchObject(getRecipeResponseData());
+      });
     });
 
-    it('calls savePage if new pageURL is provided', async () => {
-      expect.assertions(2);
+    describe('When brand new pageUrl is provided', () => {
+      it('Calls savePage', async () => {
+        expect.assertions(2);
 
-      const recipe = await addOne();
-      const savePage = mockSavePage();
+        const oldRecipe = await addOne();
+        const savePage = mockSavePage();
+        const updatedReq = getRecipeRequestData({ pageUrl: 'http://example.com' });
 
-      const updated = await recipesService.upd(
-        recipe.id,
-        getRecipeRequestData({ pageUrl: 'http://example.com' })
-      );
+        await recipesService.upd(oldRecipe.id, updatedReq);
 
-      expect(savePage).toHaveBeenCalledTimes(1);
-      expect(updated?.toObject()).toMatchObject(getRecipeResponseData());
+        expect(savePage).toHaveBeenCalledTimes(1);
+        expect(savePage).toHaveBeenCalledWith(updatedReq);
+      });
+
+      it('Returns correct RecipeDocument', async () => {
+        expect.assertions(1);
+
+        const oldRecipe = await addOne();
+        const updatedReq = getRecipeRequestData({ pageUrl: 'http://example.com' });
+
+        const updatedDoc = await recipesService.upd(oldRecipe.id, updatedReq);
+
+        expect(updatedDoc?.toObject()).toMatchObject(
+          getRecipeResponseData({
+            page: {
+              url: 'http://example.com',
+              pageType: PageType.EXTERNAL,
+              id: pageId,
+            },
+          })
+        );
+      });
     });
 
-    it("doesn't call savePage if pageURL or pageHTML is not provided", async () => {
-      expect.assertions(2);
+    describe('When pageUrl is provided instead of pageHtml', () => {
+      const htmlRecipeReq = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
 
-      const recipe = await addOne();
-      const savePage = mockSavePage();
+      it('Calls savePage', async () => {
+        expect.assertions(2);
 
-      const updated = await recipesService.upd(
-        recipe.id,
-        getRecipeRequestData({ pageUrl: undefined })
-      );
+        const oldRecipe = await recipesService.add(htmlRecipeReq);
+        const savePage = mockSavePage();
+        const updatedReq = getRecipeRequestData({ pageUrl: 'http://example.com' });
 
-      expect(savePage).not.toHaveBeenCalled();
-      expect(updated?.toObject()).toMatchObject(getRecipeResponseData());
+        await recipesService.upd(oldRecipe.id, updatedReq);
+
+        expect(savePage).toHaveBeenCalledTimes(1);
+        expect(savePage).toHaveBeenCalledWith(updatedReq);
+      });
+
+      it('Returns correct RecipeDocument', async () => {
+        expect.assertions(1);
+
+        const oldRecipe = await recipesService.add(htmlRecipeReq);
+        const updatedReq = getRecipeRequestData({ pageUrl: 'http://example.com' });
+
+        const updatedDoc = await recipesService.upd(oldRecipe.id, updatedReq);
+
+        expect(updatedDoc?.toObject()).toMatchObject(
+          getRecipeResponseData({
+            page: {
+              url: 'http://example.com',
+              pageType: PageType.EXTERNAL,
+              id: pageId,
+            },
+          })
+        );
+      });
     });
 
-    it('calls savePage if pageHTML is provided', async () => {
-      expect.assertions(2);
+    describe('When no page info is provided', () => {
+      const noPageRecipe = getRecipeRequestData(undefined, ['pageUrl']);
 
-      const recipe = await addOne({ pageUrl: undefined, pageHTML: '<div></div>' });
-      const savePage = mockSavePage();
+      it("doesn't call savePage", async () => {
+        expect.assertions(1);
 
-      const updated = await recipesService.upd(recipe.id, getRecipeRequestData());
+        const recipe = await addOne();
+        const savePage = mockSavePage();
 
-      expect(savePage).toHaveBeenCalledTimes(1);
-      expect(updated?.toObject()).toMatchObject(getRecipeResponseData());
+        await recipesService.upd(recipe.id, noPageRecipe);
+
+        expect(savePage).not.toHaveBeenCalled();
+      });
+
+      it('returns correct RecipeDocument', async () => {
+        expect.assertions(1);
+
+        const recipe = await addOne();
+        mockSavePage();
+        const expected = getRecipeResponseData({
+          page: {
+            id: pageId,
+            url,
+            pageType: PageType.EXTERNAL,
+          },
+        });
+
+        const updated = await recipesService.upd(recipe.id, noPageRecipe);
+
+        expect(updated?.toObject()).toMatchObject(expected);
+      });
     });
 
-    it('completely replaces old object', async () => {
+    describe('When pageHtml is provided', () => {
+      const htmlRecipeReq = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
+
+      it('Calls savePage', async () => {
+        expect.assertions(2);
+
+        const oldRecipe = await recipesService.add(htmlRecipeReq);
+        const savePage = mockSavePage();
+        const updatedReq = htmlRecipeReq;
+
+        await recipesService.upd(oldRecipe.id, updatedReq);
+
+        expect(savePage).toHaveBeenCalledTimes(1);
+        expect(savePage).toHaveBeenCalledWith(updatedReq);
+      });
+
+      it('Returns correct RecipeDocument', async () => {
+        expect.assertions(1);
+
+        const oldRecipe = await recipesService.add(htmlRecipeReq);
+        const updatedReq = getRecipeRequestData({ pageHTML: '<p></p>' }, ['pageUrl']);
+
+        const updatedDoc = await recipesService.upd(oldRecipe.id, updatedReq);
+
+        expect(updatedDoc?.toObject()).toMatchObject(
+          getRecipeResponseData({
+            page: {
+              pageType: PageType.USER_DEFINED,
+              id: pageId,
+            },
+          })
+        );
+      });
+    });
+
+    describe('When pageHtml is provided instead of pageUrl', () => {
+      const htmlRecipeReq = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
+
+      it('Calls savePage', async () => {
+        expect.assertions(2);
+
+        const oldRecipe = await addOne();
+        const savePage = mockSavePage();
+        const updatedReq = htmlRecipeReq;
+
+        await recipesService.upd(oldRecipe.id, updatedReq);
+
+        expect(savePage).toHaveBeenCalledTimes(1);
+        expect(savePage).toHaveBeenCalledWith(updatedReq);
+      });
+
+      it('Returns correct RecipeDocument', async () => {
+        expect.assertions(1);
+
+        const oldRecipe = await addOne();
+        const updatedReq = htmlRecipeReq;
+
+        const updatedDoc = await recipesService.upd(oldRecipe.id, updatedReq);
+
+        expect(updatedDoc?.toObject()).toMatchObject(
+          getRecipeResponseData({
+            page: {
+              pageType: PageType.USER_DEFINED,
+              id: pageId,
+            },
+          })
+        );
+      });
+    });
+
+    it('Changes only given properties of the document', async () => {
       expect.assertions(3);
 
       const recipe = await addOne();
-      const updatedDesc: RecipeRequestDto = {
+      const updateDesc: RecipeRequestDto = {
         name: 'BrandNew',
         pageHTML: '<div></div>',
       };
-      const expected = {
-        name: updatedDesc.name,
+      const expected = getRecipeResponseData({
+        name: updateDesc.name,
         page: {
           pageType: PageType.USER_DEFINED,
+          id: pageId,
         },
-      };
+      });
 
-      const updated = await recipesService.upd(recipe.id, updatedDesc);
+      const updated = await recipesService.upd(recipe.id, updateDesc);
 
       expect(updated?.toObject()).toMatchObject(expected);
-      expect(updated?.page?.url).not.toBeDefined();
-      expect(updated?.description).not.toBeDefined();
+      expect(updated?.description).toBe(getRecipeResponseData().description);
+      expect(updated?.name).toBe(updateDesc.name);
     });
+
+    // it('Removes properties with "undefined" value', async () => {
+    //   expect.assertions(2);
+
+    //   const recipe = await addOne();
+    //   const updateDesc: RecipeRequestDto = {
+    //     name: 'BrandNew',
+    //     description: undefined,
+    //   };
+    //   const expected = getRecipeResponseData(
+    //     {
+    //       name: updateDesc.name,
+    //     },
+    //     ['description']
+    //   );
+
+    //   const updated = await recipesService.upd(recipe.id, updateDesc);
+
+    //   expect(updated?.toObject()).toMatchObject(expected);
+    //   expect(updated?.description).not.toBeDefined();
+    // });
   });
 
   describe('ADD', () => {
@@ -177,33 +353,56 @@ describe('Recipes Service basic CRUD methods', () => {
       return expect(promise).rejects.toThrow();
     });
 
-    describe('with external page url provided', () => {
+    describe('With pageUrl provided', () => {
       const recipe = getRecipeRequestData({ pageUrl: url });
 
-      it('calls saveExternalHTML', async () => {
-        expect.assertions(3);
+      it('Calls saveExternalHTML', async () => {
+        expect.assertions(2);
         const saveExternalHTML = mockSaveExtHtml();
+
+        await recipesService.add(recipe);
+
+        expect(saveExternalHTML).toHaveBeenCalled();
+        expect(saveExternalHTML).toHaveBeenCalledWith(recipe.pageUrl);
+      });
+
+      it('Returns correct RecipeDocument', async () => {
+        expect.assertions(3);
 
         const recipeDoc = await recipesService.add(recipe);
 
-        expect(saveExternalHTML).toHaveBeenCalled();
         expect(recipeDoc.page?.id).toHaveLength(12);
         expect(recipeDoc.page?.pageType).toBe(PageType.EXTERNAL);
+        expect(recipeDoc.toObject()).toMatchObject(getRecipeResponseData());
       });
     });
 
-    describe('with no external page url provided', () => {
-      const recipe = getRecipeRequestData({ pageUrl: undefined, pageHTML: '<div></div>' });
+    describe('With pageHtml provided', () => {
+      const recipe = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
 
-      it('does not call a saveExternalHTML', async () => {
-        expect.assertions(3);
+      it('Does not call saveExternalHTML', async () => {
+        expect.assertions(1);
         const saveExternalHTML = mockSaveExtHtml();
+
+        await recipesService.add(recipe);
+
+        expect(saveExternalHTML).not.toHaveBeenCalled();
+      });
+
+      it('Returns correct RecipeDocument', async () => {
+        expect.assertions(2);
+
+        const expected = getRecipeResponseData({
+          page: {
+            id: pageId,
+            pageType: PageType.USER_DEFINED,
+          },
+        });
 
         const recipeDoc = await recipesService.add(recipe);
 
-        expect(saveExternalHTML).not.toHaveBeenCalled();
-        expect(recipeDoc.page?.id).not.toBeDefined();
         expect(recipeDoc.page?.url).not.toBeDefined();
+        expect(recipeDoc.toObject()).toMatchObject(expected);
       });
     });
   });
