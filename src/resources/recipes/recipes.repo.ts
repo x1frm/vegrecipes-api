@@ -21,7 +21,11 @@ export default {
   },
 
   async upd(id: string, recipe: RecipeDescription): Promise<RecipeDocument | null> {
-    return await Recipe.findByIdAndUpdate(id, recipe).exec();
+    const recipeDoc = await Recipe.findById(id);
+    if (!recipeDoc) return null;
+
+    recipeDoc.set(recipe);
+    return await recipeDoc.save();
   },
 
   async del(id: RecipeDocument['_id']): Promise<RecipeDocument | null> {

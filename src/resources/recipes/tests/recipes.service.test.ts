@@ -322,26 +322,26 @@ describe('Recipes Service basic CRUD methods', () => {
       expect(updated?.name).toBe(updateDesc.name);
     });
 
-    // it('Removes properties with "undefined" value', async () => {
-    //   expect.assertions(2);
+    it('Removes properties with "undefined" value', async () => {
+      expect.assertions(2);
 
-    //   const recipe = await addOne();
-    //   const updateDesc: RecipeRequestDto = {
-    //     name: 'BrandNew',
-    //     description: undefined,
-    //   };
-    //   const expected = getRecipeResponseData(
-    //     {
-    //       name: updateDesc.name,
-    //     },
-    //     ['description']
-    //   );
+      const recipe = await addOne();
+      const updateDesc: RecipeRequestDto = {
+        name: 'BrandNew',
+        description: undefined,
+      };
+      const expected = getRecipeResponseData(
+        {
+          name: updateDesc.name,
+        },
+        ['description']
+      );
 
-    //   const updated = await recipesService.upd(recipe.id, updateDesc);
+      const updated = await recipesService.upd(recipe.id, updateDesc);
 
-    //   expect(updated?.toObject()).toMatchObject(expected);
-    //   expect(updated?.description).not.toBeDefined();
-    // });
+      expect(updated?.toObject()).toMatchObject(expected);
+      expect(updated?.description).not.toBeDefined();
+    });
   });
 
   describe('ADD', () => {
