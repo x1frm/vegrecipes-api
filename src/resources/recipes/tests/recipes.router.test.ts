@@ -63,13 +63,13 @@ describe('/recipes/', () => {
     const updated = getRecipeRequestData({ description: 'Tasty breakfast' });
     const updatedRes = getRecipeResponseData({ description: 'Tasty breakfast' });
 
-    const put = await request
-      .put(`${url}${(post.body as RecipeResponseDto)._id}`)
+    const patch = await request
+      .patch(`${url}${(post.body as RecipeResponseDto)._id}`)
       .send(updated)
       .expect(200);
-    expect(put.body.description).toBe(updated.description);
+    expect(patch.body.description).toBe(updated.description);
 
-    const get = await request.get(`${url}${(put.body as RecipeResponseDto)._id}`).expect(200);
+    const get = await request.get(`${url}${(patch.body as RecipeResponseDto)._id}`).expect(200);
     expect(get.body).toMatchObject(updatedRes);
   });
 
@@ -82,7 +82,7 @@ describe('/recipes/', () => {
   //   const id = '604bdc0e9d07d51b052f872f';
   //   await request.get(url + id).expect(404);
   //   await request
-  //     .put(url + id)
+  //     .patch(url + id)
   //     .send(recipe)
   //     .expect(404);
   //   await request.delete(url + id).expect(404);

@@ -8,7 +8,7 @@ router.route('/').get(recipesController.getAll).post(recipesController.add);
 router
   .route('/:id')
   .get(recipesController.getById)
-  .put(recipesController.replace)
+  .patch(recipesController.update)
   .delete(recipesController.remove);
 
 export default router;

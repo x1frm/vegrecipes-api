@@ -56,6 +56,10 @@ class MockHttp {
     return this.request('PUT', url, body);
   }
 
+  patch(url: string, body: Body) {
+    return this.request('PATCH', url, body);
+  }
+
   del(url: string) {
     return this.request('DELETE', url);
   }

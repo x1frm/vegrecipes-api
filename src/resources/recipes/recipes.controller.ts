@@ -26,7 +26,7 @@ class RecipesController {
     return recipe ? res.status(200).json(recipe) : res.status(404).json('recipe not found');
   };
 
-  replace = async (req: Request, res: Response) => {
+  update = async (req: Request, res: Response) => {
     // #swagger.tags = ['Recipes']
     /* #swagger.parameters['obj'] = { 
         in: 'body',

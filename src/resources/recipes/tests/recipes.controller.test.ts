@@ -87,17 +87,17 @@ describe('/recipes/', () => {
     const updated = getRecipeRequestData({ description: 'Tasty breakfast' });
     const updatedRes = getRecipeResponseData({ description: 'Tasty breakfast' });
     const postId = (post.body as RecipeResponseDto)._id;
-    const put = mockHttp.put(`${url}${postId}`, updated).params({ id: postId });
+    const patch = mockHttp.patch(`${url}${postId}`, updated).params({ id: postId });
 
-    await recipesController.replace(...put.mock);
+    await recipesController.update(...patch.mock);
 
     const id = (post.body as RecipeResponseDto)._id;
     const get = mockHttp.get(`${url}${id}`).params({ id });
     await recipesController.getById(...get.mock);
 
-    expect(put.body.description).toBe(updated.description);
+    expect(patch.body.description).toBe(updated.description);
     expect(get.body).toMatchObject(updatedRes);
-    expect(put.status).toBe(200);
+    expect(patch.status).toBe(200);
     expect(get.status).toBe(200);
   });
 
@@ -117,7 +117,7 @@ describe('/recipes/', () => {
   //   const id = '604bdc0e9d07d51b052f872f';
   //   await request.get(url + id).expect(404);
   //   await request
-  //     .put(url + id)
+  //     .patch(url + id)
   //     .send(recipe)
   //     .expect(404);
   //   await request.delete(url + id).expect(404);
