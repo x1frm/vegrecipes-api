@@ -2,7 +2,8 @@ import { RecipeRequestDto, RecipeResponseDto } from '../recipe.dto';
 import { PageType } from '../recipes.model';
 import recipesService from '../recipes.service';
 
-const id = 'aaabbbcccddd';
+export const extPageId = 'extid0123456';
+export const userPageId = 'usrid0123456';
 const url = 'https://eda.ru/recepty/osnovnye-blyuda/bulgur-s-tikvoj-52694';
 
 export const getRecipeRequestData = (
@@ -65,7 +66,7 @@ export const getRecipeResponseData = (
     dishTypes: [{ id: '604bdc0e9d07d51b052f872f' }],
     equipment: [{ id: '604bdc0e9d07d51b052f872a' }],
     page: {
-      id,
+      id: extPageId,
       pageType: PageType.EXTERNAL,
       url,
     },
@@ -80,7 +81,7 @@ export const mockSaveExtHtml = (): jest.SpyInstance =>
   jest
     .spyOn(recipesService, 'saveExternalHTML')
     .mockImplementation()
-    .mockReturnValue(Promise.resolve(id));
+    .mockReturnValue(Promise.resolve(extPageId));
 
 export const mockSavePage = (): jest.SpyInstance =>
   jest
@@ -88,4 +89,8 @@ export const mockSavePage = (): jest.SpyInstance =>
     .mockImplementation()
     .mockReturnValue(Promise.resolve(getRecipeRequestData()));
 
-export const pageId = id;
+export const mockSaveUserHtml = (): jest.SpyInstance =>
+  jest
+    .spyOn(recipesService, 'saveUserHTML')
+    .mockImplementation()
+    .mockReturnValue(Promise.resolve(userPageId));

@@ -1,4 +1,3 @@
-import { readFile } from 'fs';
 import { RecipeRequestDto } from '../recipe.dto';
 import { PageType } from '../recipes.model';
 import recipesService from '../recipes.service';
@@ -7,15 +6,17 @@ import {
   getRecipeResponseData,
   mockSaveExtHtml,
   mockSavePage,
-  pageId,
+  mockSaveUserHtml,
+  extPageId,
+  userPageId,
 } from './helpers';
 
+let savePage = mockSavePage();
+const saveUserHTML = mockSaveUserHtml();
+const saveExternalHTML = mockSaveExtHtml();
+
 beforeEach(() => {
-  jest
-    .spyOn(recipesService, 'saveUserHTML')
-    .mockImplementation()
-    .mockReturnValue(Promise.resolve(pageId));
-  mockSaveExtHtml();
+  savePage.mockRestore();
 });
 
 const url = getRecipeRequestData().pageUrl;
@@ -30,7 +31,6 @@ describe('Recipes Service', () => {
     describe('when pageUrl is provided', () => {
       it('Calls saveExternalHTML', async () => {
         expect.assertions(2);
-        const saveExternalHTML = mockSaveExtHtml();
 
         await recipesService.savePage(recipe);
 
@@ -52,7 +52,6 @@ describe('Recipes Service', () => {
         expect.assertions(2);
 
         const incorrect = getRecipeRequestData(undefined, ['pageUrl']);
-        const saveExternalHTML = mockSaveExtHtml();
 
         const promise = recipesService.savePage(incorrect);
 
@@ -65,7 +64,6 @@ describe('Recipes Service', () => {
       it('Calls saveUserHTML', async () => {
         expect.assertions(2);
 
-        const saveUserHTML = jest.spyOn(recipesService, 'saveUserHTML').mockImplementation();
         const recipe2 = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
 
         await recipesService.savePage(recipe2);
@@ -77,16 +75,11 @@ describe('Recipes Service', () => {
       it('Returns RecipeDescription', async () => {
         expect.assertions(1);
 
-        const id = 'qqqwwweeerrr';
-        jest
-          .spyOn(recipesService, 'saveUserHTML')
-          .mockImplementation()
-          .mockReturnValue(Promise.resolve(id));
         const recipe2 = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
         const expected = getRecipeResponseData(
           {
             page: {
-              id,
+              id: userPageId,
               pageType: PageType.USER_DEFINED,
             },
           },
@@ -108,7 +101,7 @@ describe('Recipes Service basic CRUD methods', () => {
         expect.assertions(1);
 
         const recipe = await addOne();
-        const savePage = mockSavePage();
+        savePage = mockSavePage();
 
         await recipesService.upd(recipe.id, getRecipeRequestData());
 
@@ -131,7 +124,7 @@ describe('Recipes Service basic CRUD methods', () => {
         expect.assertions(2);
 
         const oldRecipe = await addOne();
-        const savePage = mockSavePage();
+        savePage = mockSavePage();
         const updatedReq = getRecipeRequestData({ pageUrl: 'http://example.com' });
 
         await recipesService.upd(oldRecipe.id, updatedReq);
@@ -153,7 +146,7 @@ describe('Recipes Service basic CRUD methods', () => {
             page: {
               url: 'http://example.com',
               pageType: PageType.EXTERNAL,
-              id: pageId,
+              id: extPageId,
             },
           })
         );
@@ -167,7 +160,7 @@ describe('Recipes Service basic CRUD methods', () => {
         expect.assertions(2);
 
         const oldRecipe = await recipesService.add(htmlRecipeReq);
-        const savePage = mockSavePage();
+        savePage = mockSavePage();
         const updatedReq = getRecipeRequestData({ pageUrl: 'http://example.com' });
 
         await recipesService.upd(oldRecipe.id, updatedReq);
@@ -189,7 +182,7 @@ describe('Recipes Service basic CRUD methods', () => {
             page: {
               url: 'http://example.com',
               pageType: PageType.EXTERNAL,
-              id: pageId,
+              id: extPageId,
             },
           })
         );
@@ -203,7 +196,7 @@ describe('Recipes Service basic CRUD methods', () => {
         expect.assertions(1);
 
         const recipe = await addOne();
-        const savePage = mockSavePage();
+        savePage = mockSavePage();
 
         await recipesService.upd(recipe.id, noPageRecipe);
 
@@ -217,7 +210,7 @@ describe('Recipes Service basic CRUD methods', () => {
         mockSavePage();
         const expected = getRecipeResponseData({
           page: {
-            id: pageId,
+            id: extPageId,
             url,
             pageType: PageType.EXTERNAL,
           },
@@ -236,7 +229,7 @@ describe('Recipes Service basic CRUD methods', () => {
         expect.assertions(2);
 
         const oldRecipe = await recipesService.add(htmlRecipeReq);
-        const savePage = mockSavePage();
+        savePage = mockSavePage();
         const updatedReq = htmlRecipeReq;
 
         await recipesService.upd(oldRecipe.id, updatedReq);
@@ -257,7 +250,7 @@ describe('Recipes Service basic CRUD methods', () => {
           getRecipeResponseData({
             page: {
               pageType: PageType.USER_DEFINED,
-              id: pageId,
+              id: userPageId,
             },
           })
         );
@@ -271,7 +264,7 @@ describe('Recipes Service basic CRUD methods', () => {
         expect.assertions(2);
 
         const oldRecipe = await addOne();
-        const savePage = mockSavePage();
+        savePage = mockSavePage();
         const updatedReq = htmlRecipeReq;
 
         await recipesService.upd(oldRecipe.id, updatedReq);
@@ -292,7 +285,7 @@ describe('Recipes Service basic CRUD methods', () => {
           getRecipeResponseData({
             page: {
               pageType: PageType.USER_DEFINED,
-              id: pageId,
+              id: userPageId,
             },
           })
         );
@@ -311,7 +304,7 @@ describe('Recipes Service basic CRUD methods', () => {
         name: updateDesc.name,
         page: {
           pageType: PageType.USER_DEFINED,
-          id: pageId,
+          id: userPageId,
         },
       });
 
@@ -358,7 +351,6 @@ describe('Recipes Service basic CRUD methods', () => {
 
       it('Calls saveExternalHTML', async () => {
         expect.assertions(2);
-        const saveExternalHTML = mockSaveExtHtml();
 
         await recipesService.add(recipe);
 
@@ -382,7 +374,6 @@ describe('Recipes Service basic CRUD methods', () => {
 
       it('Does not call saveExternalHTML', async () => {
         expect.assertions(1);
-        const saveExternalHTML = mockSaveExtHtml();
 
         await recipesService.add(recipe);
 
@@ -394,7 +385,7 @@ describe('Recipes Service basic CRUD methods', () => {
 
         const expected = getRecipeResponseData({
           page: {
-            id: pageId,
+            id: userPageId,
             pageType: PageType.USER_DEFINED,
           },
         });
