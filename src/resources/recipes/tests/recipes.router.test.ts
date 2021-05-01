@@ -1,16 +1,16 @@
 import supertest from 'supertest';
 import { clearDatabase } from '../../../../test/setup/db';
 import app from '../../../app';
-import { RecipeRequestDto, RecipeResponseDto } from '../recipe.dto';
+import { RecipePostDto, RecipeResponseDto } from '../recipe.dto';
 import recipesService from '../recipes.service';
-import { getRecipeRequestData, mockSaveExtHtml, getRecipeResponseData } from './helpers';
+import { getRecipePostDto, mockSaveExtHtml, getRecipeResponseDto } from './helpers';
 
 const request = supertest(app);
 const url = '/api/recipes/';
 
-const recipe = getRecipeRequestData();
-const recipeRes = getRecipeResponseData();
-const postOne = (item: RecipeRequestDto = recipe) => request.post(url).send(item).expect(200);
+const recipe = getRecipePostDto();
+const recipeRes = getRecipeResponseDto();
+const postOne = (item: RecipePostDto = recipe) => request.post(url).send(item).expect(200);
 
 describe('/recipes/', () => {
   beforeEach(() => {
@@ -24,10 +24,10 @@ describe('/recipes/', () => {
 
   it('Gets all recipes', async () => {
     expect.assertions(1);
-    const pancakes = getRecipeRequestData({
+    const pancakes = getRecipePostDto({
       name: 'Pancakes',
     });
-    const pancakesRes = getRecipeResponseData({
+    const pancakesRes = getRecipeResponseDto({
       name: 'Pancakes',
     });
     await postOne();
@@ -60,8 +60,8 @@ describe('/recipes/', () => {
     expect.assertions(2);
     const post = await postOne();
 
-    const updated = getRecipeRequestData({ description: 'Tasty breakfast' });
-    const updatedRes = getRecipeResponseData({ description: 'Tasty breakfast' });
+    const updated = getRecipePostDto({ description: 'Tasty breakfast' });
+    const updatedRes = getRecipeResponseDto({ description: 'Tasty breakfast' });
 
     const patch = await request
       .patch(`${url}${(post.body as RecipeResponseDto)._id}`)

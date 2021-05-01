@@ -1,16 +1,16 @@
 import mockHttp from '../../../../test/helpers/mock-http';
 import { clearDatabase } from '../../../../test/setup/db';
-import { RecipeRequestDto, RecipeResponseDto } from '../recipe.dto';
+import { RecipePostDto, RecipeResponseDto } from '../recipe.dto';
 import recipesController from '../recipes.controller';
 import recipesService from '../recipes.service';
-import { getRecipeRequestData, getRecipeResponseData, mockSaveExtHtml } from './helpers';
+import { getRecipePostDto, getRecipeResponseDto, mockSaveExtHtml } from './helpers';
 
 const url = '/api/recipes/';
 
-const recipe = getRecipeRequestData();
-const recipeRes = getRecipeResponseData();
+const recipe = getRecipePostDto();
+const recipeRes = getRecipeResponseDto();
 
-const postOne = async (item: RecipeRequestDto = recipe) => {
+const postOne = async (item: RecipePostDto = recipe) => {
   const mock = mockHttp.post(url, item);
   await recipesController.add(...mock.mock);
   return mock;
@@ -37,10 +37,10 @@ describe('/recipes/', () => {
   it('Gets all recipes', async () => {
     expect.assertions(2);
 
-    const pancakes = getRecipeRequestData({
+    const pancakes = getRecipePostDto({
       name: 'Pancakes',
     });
-    const pancakesRes = getRecipeResponseData({
+    const pancakesRes = getRecipeResponseDto({
       name: 'Pancakes',
     });
     await postOne();
@@ -84,8 +84,8 @@ describe('/recipes/', () => {
     expect.assertions(4);
 
     const post = await postOne();
-    const updated = getRecipeRequestData({ description: 'Tasty breakfast' });
-    const updatedRes = getRecipeResponseData({ description: 'Tasty breakfast' });
+    const updated = getRecipePostDto({ description: 'Tasty breakfast' });
+    const updatedRes = getRecipeResponseDto({ description: 'Tasty breakfast' });
     const postId = (post.body as RecipeResponseDto)._id;
     const patch = mockHttp.patch(`${url}${postId}`, updated).params({ id: postId });
 

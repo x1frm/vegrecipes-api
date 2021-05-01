@@ -1,4 +1,4 @@
-import { RecipeRequestDto, RecipeResponseDto } from '../recipe.dto';
+import { RecipePostDto, RecipeResponseDto } from '../recipe.dto';
 import { PageType } from '../recipes.model';
 import recipesService from '../recipes.service';
 
@@ -6,11 +6,11 @@ export const extPageId = 'extid0123456';
 export const userPageId = 'usrid0123456';
 const url = 'https://eda.ru/recepty/osnovnye-blyuda/bulgur-s-tikvoj-52694';
 
-export const getRecipeRequestData = (
-  mergeObj?: Partial<RecipeRequestDto>,
-  propsToRemove?: [keyof RecipeRequestDto]
-): RecipeRequestDto => {
-  const request: RecipeRequestDto = {
+export const getRecipePostDto = (
+  mergeObj?: Partial<RecipePostDto>,
+  propsToRemove?: [keyof RecipePostDto]
+): RecipePostDto => {
+  const request: RecipePostDto = {
     name: 'Blinchiki',
     description: 'Mmm',
     time: 20,
@@ -40,7 +40,7 @@ export const getRecipeRequestData = (
   return { ...request, ...mergeObj };
 };
 
-export const getRecipeResponseData = (
+export const getRecipeResponseDto = (
   mergeObj?: Partial<RecipeResponseDto>,
   propsToRemove?: [keyof RecipeResponseDto]
 ): Partial<RecipeResponseDto> => {
@@ -87,7 +87,7 @@ export const mockSavePage = (): jest.SpyInstance =>
   jest
     .spyOn(recipesService, 'savePage')
     .mockImplementation()
-    .mockReturnValue(Promise.resolve(getRecipeRequestData()));
+    .mockReturnValue(Promise.resolve(getRecipePostDto()));
 
 export const mockSaveUserHtml = (): jest.SpyInstance =>
   jest

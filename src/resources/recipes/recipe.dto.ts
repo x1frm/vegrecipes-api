@@ -1,6 +1,6 @@
 import { RecipeObject } from '../../interfaces/mongoose';
 
-export interface RecipeRequestDto {
+export interface RecipePostDto {
   name: string;
   description?: string;
   ingredients?: RecipeIngredientDto[];
@@ -16,7 +16,7 @@ export interface RecipeRequestDto {
   pageHTML?: string;
 }
 
-export type RecipePatchDto = Partial<RecipeRequestDto>;
+export type RecipePatchDto = Partial<RecipePostDto>;
 
 export type RecipeResponseDto = RecipeObject;
 

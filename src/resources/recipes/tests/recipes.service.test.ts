@@ -1,9 +1,9 @@
-import { RecipeRequestDto } from '../recipe.dto';
+import { RecipePostDto } from '../recipe.dto';
 import { PageType } from '../recipes.model';
 import recipesService from '../recipes.service';
 import {
-  getRecipeRequestData,
-  getRecipeResponseData,
+  getRecipePostDto,
+  getRecipeResponseDto,
   mockSaveExtHtml,
   mockSavePage,
   mockSaveUserHtml,
@@ -19,13 +19,13 @@ beforeEach(() => {
   savePage.mockRestore();
 });
 
-const url = getRecipeRequestData().pageUrl;
+const url = getRecipePostDto().pageUrl;
 
-const addOne = async (...args: Parameters<typeof getRecipeRequestData>) =>
-  await recipesService.add(getRecipeRequestData(...args));
+const addOne = async (...args: Parameters<typeof getRecipePostDto>) =>
+  await recipesService.add(getRecipePostDto(...args));
 
 describe('Recipes Service', () => {
-  const recipe = getRecipeRequestData();
+  const recipe = getRecipePostDto();
 
   describe('savePage method', () => {
     describe('when pageUrl is provided', () => {
@@ -43,7 +43,7 @@ describe('Recipes Service', () => {
 
         const recipeDesc = await recipesService.savePage(recipe);
 
-        expect(recipeDesc).toMatchObject(getRecipeResponseData());
+        expect(recipeDesc).toMatchObject(getRecipeResponseDto());
       });
     });
 
@@ -51,7 +51,7 @@ describe('Recipes Service', () => {
       it('throws an error', async () => {
         expect.assertions(2);
 
-        const incorrect = getRecipeRequestData(undefined, ['pageUrl']);
+        const incorrect = getRecipePostDto(undefined, ['pageUrl']);
 
         const promise = recipesService.savePage(incorrect);
 
@@ -64,7 +64,7 @@ describe('Recipes Service', () => {
       it('Calls saveUserHTML', async () => {
         expect.assertions(2);
 
-        const recipe2 = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
+        const recipe2 = getRecipePostDto({ pageHTML: '<div></div>' }, ['pageUrl']);
 
         await recipesService.savePage(recipe2);
 
@@ -75,8 +75,8 @@ describe('Recipes Service', () => {
       it('Returns RecipeDescription', async () => {
         expect.assertions(1);
 
-        const recipe2 = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
-        const expected = getRecipeResponseData(
+        const recipe2 = getRecipePostDto({ pageHTML: '<div></div>' }, ['pageUrl']);
+        const expected = getRecipeResponseDto(
           {
             page: {
               id: userPageId,
@@ -103,7 +103,7 @@ describe('Recipes Service basic CRUD methods', () => {
         const recipe = await addOne();
         savePage = mockSavePage();
 
-        await recipesService.upd(recipe.id, getRecipeRequestData());
+        await recipesService.upd(recipe.id, getRecipePostDto());
 
         expect(savePage).not.toHaveBeenCalled();
       });
@@ -113,9 +113,9 @@ describe('Recipes Service basic CRUD methods', () => {
 
         const recipe = await addOne();
 
-        const updated = await recipesService.upd(recipe.id, getRecipeRequestData());
+        const updated = await recipesService.upd(recipe.id, getRecipePostDto());
 
-        expect(updated?.toObject()).toMatchObject(getRecipeResponseData());
+        expect(updated?.toObject()).toMatchObject(getRecipeResponseDto());
       });
     });
 
@@ -125,7 +125,7 @@ describe('Recipes Service basic CRUD methods', () => {
 
         const oldRecipe = await addOne();
         savePage = mockSavePage();
-        const updatedReq = getRecipeRequestData({ pageUrl: 'http://example.com' });
+        const updatedReq = getRecipePostDto({ pageUrl: 'http://example.com' });
 
         await recipesService.upd(oldRecipe.id, updatedReq);
 
@@ -137,12 +137,12 @@ describe('Recipes Service basic CRUD methods', () => {
         expect.assertions(1);
 
         const oldRecipe = await addOne();
-        const updatedReq = getRecipeRequestData({ pageUrl: 'http://example.com' });
+        const updatedReq = getRecipePostDto({ pageUrl: 'http://example.com' });
 
         const updatedDoc = await recipesService.upd(oldRecipe.id, updatedReq);
 
         expect(updatedDoc?.toObject()).toMatchObject(
-          getRecipeResponseData({
+          getRecipeResponseDto({
             page: {
               url: 'http://example.com',
               pageType: PageType.EXTERNAL,
@@ -154,14 +154,14 @@ describe('Recipes Service basic CRUD methods', () => {
     });
 
     describe('When pageUrl is provided instead of pageHtml', () => {
-      const htmlRecipeReq = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
+      const htmlRecipeReq = getRecipePostDto({ pageHTML: '<div></div>' }, ['pageUrl']);
 
       it('Calls savePage', async () => {
         expect.assertions(2);
 
         const oldRecipe = await recipesService.add(htmlRecipeReq);
         savePage = mockSavePage();
-        const updatedReq = getRecipeRequestData({ pageUrl: 'http://example.com' });
+        const updatedReq = getRecipePostDto({ pageUrl: 'http://example.com' });
 
         await recipesService.upd(oldRecipe.id, updatedReq);
 
@@ -173,12 +173,12 @@ describe('Recipes Service basic CRUD methods', () => {
         expect.assertions(1);
 
         const oldRecipe = await recipesService.add(htmlRecipeReq);
-        const updatedReq = getRecipeRequestData({ pageUrl: 'http://example.com' });
+        const updatedReq = getRecipePostDto({ pageUrl: 'http://example.com' });
 
         const updatedDoc = await recipesService.upd(oldRecipe.id, updatedReq);
 
         expect(updatedDoc?.toObject()).toMatchObject(
-          getRecipeResponseData({
+          getRecipeResponseDto({
             page: {
               url: 'http://example.com',
               pageType: PageType.EXTERNAL,
@@ -190,7 +190,7 @@ describe('Recipes Service basic CRUD methods', () => {
     });
 
     describe('When no page info is provided', () => {
-      const noPageRecipe = getRecipeRequestData(undefined, ['pageUrl']);
+      const noPageRecipe = getRecipePostDto(undefined, ['pageUrl']);
 
       it("doesn't call savePage", async () => {
         expect.assertions(1);
@@ -208,7 +208,7 @@ describe('Recipes Service basic CRUD methods', () => {
 
         const recipe = await addOne();
         mockSavePage();
-        const expected = getRecipeResponseData({
+        const expected = getRecipeResponseDto({
           page: {
             id: extPageId,
             url,
@@ -223,7 +223,7 @@ describe('Recipes Service basic CRUD methods', () => {
     });
 
     describe('When pageHtml is provided', () => {
-      const htmlRecipeReq = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
+      const htmlRecipeReq = getRecipePostDto({ pageHTML: '<div></div>' }, ['pageUrl']);
 
       it('Calls savePage', async () => {
         expect.assertions(2);
@@ -242,12 +242,12 @@ describe('Recipes Service basic CRUD methods', () => {
         expect.assertions(1);
 
         const oldRecipe = await recipesService.add(htmlRecipeReq);
-        const updatedReq = getRecipeRequestData({ pageHTML: '<p></p>' }, ['pageUrl']);
+        const updatedReq = getRecipePostDto({ pageHTML: '<p></p>' }, ['pageUrl']);
 
         const updatedDoc = await recipesService.upd(oldRecipe.id, updatedReq);
 
         expect(updatedDoc?.toObject()).toMatchObject(
-          getRecipeResponseData({
+          getRecipeResponseDto({
             page: {
               pageType: PageType.USER_DEFINED,
               id: userPageId,
@@ -258,7 +258,7 @@ describe('Recipes Service basic CRUD methods', () => {
     });
 
     describe('When pageHtml is provided instead of pageUrl', () => {
-      const htmlRecipeReq = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
+      const htmlRecipeReq = getRecipePostDto({ pageHTML: '<div></div>' }, ['pageUrl']);
 
       it('Calls savePage', async () => {
         expect.assertions(2);
@@ -282,7 +282,7 @@ describe('Recipes Service basic CRUD methods', () => {
         const updatedDoc = await recipesService.upd(oldRecipe.id, updatedReq);
 
         expect(updatedDoc?.toObject()).toMatchObject(
-          getRecipeResponseData({
+          getRecipeResponseDto({
             page: {
               pageType: PageType.USER_DEFINED,
               id: userPageId,
@@ -296,11 +296,11 @@ describe('Recipes Service basic CRUD methods', () => {
       expect.assertions(3);
 
       const recipe = await addOne();
-      const updateDesc: RecipeRequestDto = {
+      const updateDesc: RecipePostDto = {
         name: 'BrandNew',
         pageHTML: '<div></div>',
       };
-      const expected = getRecipeResponseData({
+      const expected = getRecipeResponseDto({
         name: updateDesc.name,
         page: {
           pageType: PageType.USER_DEFINED,
@@ -311,7 +311,7 @@ describe('Recipes Service basic CRUD methods', () => {
       const updated = await recipesService.upd(recipe.id, updateDesc);
 
       expect(updated?.toObject()).toMatchObject(expected);
-      expect(updated?.description).toBe(getRecipeResponseData().description);
+      expect(updated?.description).toBe(getRecipeResponseDto().description);
       expect(updated?.name).toBe(updateDesc.name);
     });
 
@@ -319,11 +319,11 @@ describe('Recipes Service basic CRUD methods', () => {
       expect.assertions(2);
 
       const recipe = await addOne();
-      const updateDesc: RecipeRequestDto = {
+      const updateDesc: RecipePostDto = {
         name: 'BrandNew',
         description: undefined,
       };
-      const expected = getRecipeResponseData(
+      const expected = getRecipeResponseDto(
         {
           name: updateDesc.name,
         },
@@ -341,13 +341,13 @@ describe('Recipes Service basic CRUD methods', () => {
     it('throws an error if pageURL or pageHTML is not provided', async () => {
       expect.assertions(1);
 
-      const promise = recipesService.add(getRecipeRequestData({ pageUrl: undefined }));
+      const promise = recipesService.add(getRecipePostDto({ pageUrl: undefined }));
 
       return expect(promise).rejects.toThrow();
     });
 
     describe('With pageUrl provided', () => {
-      const recipe = getRecipeRequestData({ pageUrl: url });
+      const recipe = getRecipePostDto({ pageUrl: url });
 
       it('Calls saveExternalHTML', async () => {
         expect.assertions(2);
@@ -365,12 +365,12 @@ describe('Recipes Service basic CRUD methods', () => {
 
         expect(recipeDoc.page?.id).toHaveLength(12);
         expect(recipeDoc.page?.pageType).toBe(PageType.EXTERNAL);
-        expect(recipeDoc.toObject()).toMatchObject(getRecipeResponseData());
+        expect(recipeDoc.toObject()).toMatchObject(getRecipeResponseDto());
       });
     });
 
     describe('With pageHtml provided', () => {
-      const recipe = getRecipeRequestData({ pageHTML: '<div></div>' }, ['pageUrl']);
+      const recipe = getRecipePostDto({ pageHTML: '<div></div>' }, ['pageUrl']);
 
       it('Does not call saveExternalHTML', async () => {
         expect.assertions(1);
@@ -383,7 +383,7 @@ describe('Recipes Service basic CRUD methods', () => {
       it('Returns correct RecipeDocument', async () => {
         expect.assertions(2);
 
-        const expected = getRecipeResponseData({
+        const expected = getRecipeResponseDto({
           page: {
             id: userPageId,
             pageType: PageType.USER_DEFINED,

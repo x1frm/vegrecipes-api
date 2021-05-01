@@ -6,7 +6,7 @@ import { writeFile } from 'fs/promises';
 import recipesRepo from './recipes.repo';
 import Recipe, { PageType } from './recipes.model';
 import { addProtocol, getHostname } from '../../common/utils';
-import { RecipeRequestDto } from './recipe.dto';
+import { RecipePostDto } from './recipe.dto';
 
 const getId = mongoose.Types.ObjectId;
 
@@ -15,13 +15,13 @@ class RecipesService {
 
   getById = (id: string): Promise<RecipeDocument | null> => recipesRepo.getById(getId(id));
 
-  async add(recipeDto: RecipeRequestDto): Promise<RecipeDocument> {
+  async add(recipeDto: RecipePostDto): Promise<RecipeDocument> {
     const recipe = await this.savePage(recipeDto);
 
     return await recipesRepo.add(new Recipe(recipe));
   }
 
-  async upd(id: string, recipeDto: RecipeRequestDto): Promise<RecipeDocument | null> {
+  async upd(id: string, recipeDto: RecipePostDto): Promise<RecipeDocument | null> {
     let recipe: RecipeDescription = recipeDto;
 
     if (recipeDto.pageHTML) {
@@ -46,7 +46,7 @@ class RecipesService {
 
   del = (id: string): Promise<RecipeDocument | null> => recipesRepo.del(getId(id));
 
-  async savePage(recipeDto: RecipeRequestDto): Promise<RecipeDescription> {
+  async savePage(recipeDto: RecipePostDto): Promise<RecipeDescription> {
     let recipe: RecipeDescription;
 
     if (recipeDto.pageUrl) {

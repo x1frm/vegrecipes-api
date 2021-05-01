@@ -2,12 +2,12 @@
 import faker from 'faker';
 import { RecipeIngredientDto } from '../recipe.dto';
 import { patchSchema, postSchema } from '../validation/recipes.schemas';
-import { getRecipeRequestData } from './helpers';
+import { getRecipePostDto } from './helpers';
 
 describe('Recipes joi schemas validation', () => {
   describe('PATCH', () => {
     it('Passes correct data', () => {
-      const obj = getRecipeRequestData(undefined, ['name']);
+      const obj = getRecipePostDto(undefined, ['name']);
 
       const result = patchSchema.validate(obj);
 
@@ -15,7 +15,7 @@ describe('Recipes joi schemas validation', () => {
     });
 
     it('Rejects object with extra field', () => {
-      const obj = getRecipeRequestData({
+      const obj = getRecipePostDto({
         // @ts-ignore
         extraField: 'kek',
       });
@@ -26,7 +26,7 @@ describe('Recipes joi schemas validation', () => {
     });
 
     it('Rejects object with deep extra field', () => {
-      const obj = getRecipeRequestData({
+      const obj = getRecipePostDto({
         nutrition: {
           // @ts-ignore
           deepExtraField: 'lol',
@@ -39,7 +39,7 @@ describe('Recipes joi schemas validation', () => {
     });
 
     it('Rejects object with incorrect deep field', () => {
-      const obj = getRecipeRequestData({
+      const obj = getRecipePostDto({
         nutrition: {
           // @ts-ignore
           fat: 'what?',
@@ -52,7 +52,7 @@ describe('Recipes joi schemas validation', () => {
     });
 
     it('Rejects object with two unique values', () => {
-      const obj = getRecipeRequestData();
+      const obj = getRecipePostDto();
       (obj.ingredients as RecipeIngredientDto[])[2] = {
         ...(obj.ingredients?.[0] as RecipeIngredientDto),
       };
@@ -63,7 +63,7 @@ describe('Recipes joi schemas validation', () => {
     });
 
     it('Rejects object without required objectId', () => {
-      const obj = getRecipeRequestData({
+      const obj = getRecipePostDto({
         ingredients: [
           // @ts-ignore
           {
@@ -80,7 +80,7 @@ describe('Recipes joi schemas validation', () => {
 
   describe('POST', () => {
     it('Rejects object without required field', () => {
-      const obj = getRecipeRequestData(undefined, ['name']);
+      const obj = getRecipePostDto(undefined, ['name']);
 
       const result = postSchema.validate(obj);
 
@@ -88,7 +88,7 @@ describe('Recipes joi schemas validation', () => {
     });
 
     it('Rejects object with incorrect URL', () => {
-      const obj = getRecipeRequestData({
+      const obj = getRecipePostDto({
         pageUrl: faker.internet.email(),
       });
 
@@ -98,7 +98,7 @@ describe('Recipes joi schemas validation', () => {
     });
 
     it('Passes object with correct URL', () => {
-      const obj = getRecipeRequestData({
+      const obj = getRecipePostDto({
         pageUrl: faker.internet.url(),
       });
 

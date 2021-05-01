@@ -10,12 +10,12 @@ import {
   MAX_REIPE_DESCRIPTION_LENGTH,
 } from '../../../common/const';
 import { DeepRecord } from '../../../common/types';
-import { RecipePatchDto, RecipeRequestDto } from '../recipe.dto';
+import { RecipePatchDto, RecipePostDto } from '../recipe.dto';
 
 // eslint-disable-next-line
 const oid: () => joi.Schema = objectid(joi);
 
-type PostSchemaMap = DeepRecord<RecipeRequestDto, joi.Schema>;
+type PostSchemaMap = DeepRecord<RecipePostDto, joi.Schema>;
 type BaseSchemaMap = Omit<PostSchemaMap, 'pageUrl' | 'pageHTML'>;
 type PatchSchemaMap = DeepRecord<RecipePatchDto, joi.Schema>;
 
@@ -72,6 +72,6 @@ const postSchemaMap: PostSchemaMap = {
   name: baseSchemaMap.name.required(),
 };
 
-export const postSchema = joi.object(postSchemaMap).xor('pageHtml', 'pageUrl');
+export const postSchema = joi.object<RecipePostDto>(postSchemaMap).xor('pageHtml', 'pageUrl');
 
-export const patchSchema = joi.object(patchSchemaMap).oxor('pageHtml', 'pageUrl');
+export const patchSchema = joi.object<RecipePatchDto>(patchSchemaMap).oxor('pageHtml', 'pageUrl');
