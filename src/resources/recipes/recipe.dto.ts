@@ -16,6 +16,8 @@ export interface RecipeRequestDto {
   pageHTML?: string;
 }
 
+export type RecipePatchDto = Partial<RecipeRequestDto>;
+
 export type RecipeResponseDto = RecipeObject;
 
 export interface RecipeIngredientDto {

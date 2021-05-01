@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
 import { RecipeDocument, RecipeModel, RecipeSchema } from 'src/interfaces/mongoose';
+import {
+  MAX_RECIPE_NAME_LENGTH,
+  MAX_RECIPE_TIME,
+  MAX_REIPE_DESCRIPTION_LENGTH,
+} from '../../common/const';
 import { objectIdGetter } from '../../common/model.utils';
 
 mongoose.SchemaTypes.ObjectId.get(objectIdGetter);
@@ -55,18 +60,18 @@ const recipeSchema: RecipeSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    maxLength: 100,
+    maxLength: MAX_RECIPE_NAME_LENGTH,
   },
   description: {
     type: String,
-    maxlength: 1000,
+    maxlength: MAX_REIPE_DESCRIPTION_LENGTH,
   },
   ingredients: [recipeIngredientSchema],
   time: {
     // in minutes
     type: Number,
     min: 0,
-    max: 43200,
+    max: MAX_RECIPE_TIME,
   },
   nutrition: {
     // in percents
