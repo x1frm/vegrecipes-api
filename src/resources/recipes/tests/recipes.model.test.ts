@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { DeepPartial } from 'src/common/types';
 import { RecipeDescription } from 'src/interfaces/mongoose';
+import { MAX_RECIPE_NAME_LENGTH, MAX_REIPE_DESCRIPTION_LENGTH } from '../../../common/const';
 import { longStr } from '../../../common/utils';
 import Recipe from '../recipes.model';
 import { getRecipePostDto } from './helpers';
@@ -34,8 +35,8 @@ describe('Recipe Model Test', () => {
 
     const incorrect = {
       ...getRecipePostDto(),
-      name: longStr(101),
-      description: longStr(1001),
+      name: longStr(MAX_RECIPE_NAME_LENGTH + 1),
+      description: longStr(MAX_REIPE_DESCRIPTION_LENGTH + 1),
       ingredients: [
         {
           id: new mongoose.Types.ObjectId(),
