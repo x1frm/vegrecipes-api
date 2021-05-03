@@ -6,16 +6,18 @@ const url = '/api/recipes';
 
 describe('Recipes validation service', () => {
   describe('Joi validation of Request property', () => {
+    const next = jest.fn();
+    const validators = recipesValidation.joi.post;
+
     describe('With correct data', () => {
       const data = getRecipePostDto();
 
       it('Calls next()', () => {
         const mock = mockHttp.post(url, data);
-        const next = jest.fn();
 
-        recipesValidation.validator().post()(...mock.reqHandlerParams, next);
+        validators.forEach(validator => validator(...mock.reqHandlerParams, next));
 
-        expect(next).toHaveBeenCalledTimes(1);
+        expect(next).toHaveBeenCalledTimes(validators.length);
         expect(next).toHaveBeenCalledWith();
       });
     });
@@ -25,18 +27,15 @@ describe('Recipes validation service', () => {
 
       it('Does not call next', () => {
         const mock = mockHttp.post(url, data);
-        const next = jest.fn();
 
-        recipesValidation.validator().post()(...mock.reqHandlerParams, next);
-
+        validators.forEach(validator => validator(...mock.reqHandlerParams, next));
         expect(next).not.toHaveBeenCalled();
       });
 
       it('Sends 400 with correct error', () => {
         const mock = mockHttp.post(url, data);
-        const next = jest.fn();
 
-        recipesValidation.validator().post()(...mock.reqHandlerParams, next);
+        validators.forEach(validator => validator(...mock.reqHandlerParams, next));
 
         expect(mock.status).toBe(400);
         expect(mock.body.error).toBeDefined();

@@ -4,15 +4,15 @@ import { RecipeIngredientDto } from '../recipe.dto';
 import recipesSchemas from '../validation/recipes.schemas';
 import { getRecipePostDto } from './helpers';
 
-const patchSchema = recipesSchemas.patch;
-const postSchema = recipesSchemas.post;
+const patch = recipesSchemas.patch.body;
+const post = recipesSchemas.post.body;
 
 describe('Recipes joi schemas validation', () => {
   describe('PATCH', () => {
     it('Passes correct data', () => {
       const obj = getRecipePostDto(undefined, ['name']);
 
-      const result = patchSchema.validate(obj);
+      const result = patch.validate(obj);
 
       expect(result.error).not.toBeDefined();
     });
@@ -23,7 +23,7 @@ describe('Recipes joi schemas validation', () => {
         extraField: 'kek',
       });
 
-      const result = patchSchema.validate(obj);
+      const result = patch.validate(obj);
 
       expect(result.error?.message).toContain('extraField');
     });
@@ -36,7 +36,7 @@ describe('Recipes joi schemas validation', () => {
         },
       });
 
-      const result = patchSchema.validate(obj);
+      const result = patch.validate(obj);
 
       expect(result.error?.message).toContain('deepExtraField');
     });
@@ -49,7 +49,7 @@ describe('Recipes joi schemas validation', () => {
         },
       });
 
-      const result = patchSchema.validate(obj);
+      const result = patch.validate(obj);
 
       expect(result.error?.message).toContain('fat');
     });
@@ -60,7 +60,7 @@ describe('Recipes joi schemas validation', () => {
         ...(obj.ingredients?.[0] as RecipeIngredientDto),
       };
 
-      const result = patchSchema.validate(obj);
+      const result = patch.validate(obj);
 
       expect(result.error?.message).toContain('ingredients[2]');
     });
@@ -75,7 +75,7 @@ describe('Recipes joi schemas validation', () => {
         ],
       });
 
-      const result = patchSchema.validate(obj);
+      const result = patch.validate(obj);
 
       expect(result.error?.message).toContain('ingredients[0]');
     });
@@ -85,7 +85,7 @@ describe('Recipes joi schemas validation', () => {
     it('Rejects object without required field', () => {
       const obj = getRecipePostDto(undefined, ['name']);
 
-      const result = postSchema.validate(obj);
+      const result = post.validate(obj);
 
       expect(result.error?.message).toContain('name');
     });
@@ -95,7 +95,7 @@ describe('Recipes joi schemas validation', () => {
         pageUrl: faker.internet.email(),
       });
 
-      const result = postSchema.validate(obj);
+      const result = post.validate(obj);
 
       expect(result.error?.message).toContain('pageUrl');
     });
@@ -105,7 +105,7 @@ describe('Recipes joi schemas validation', () => {
         pageUrl: faker.internet.url(),
       });
 
-      const result = postSchema.validate(obj);
+      const result = post.validate(obj);
 
       expect(result.error).not.toBeDefined();
     });

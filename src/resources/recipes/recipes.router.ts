@@ -7,12 +7,12 @@ const router = express.Router();
 router
   .route('/')
   .get(recipesController.getAll)
-  .post(recipesValidation.validator().post(), recipesController.add);
+  .post(recipesValidation.joi.post, recipesController.add);
 
 router
   .route('/:id')
   .get(recipesController.getById)
-  .patch(recipesValidation.validator().patch(), recipesController.update)
+  .patch(recipesValidation.joi.patch, recipesController.update)
   .delete(recipesController.remove);
 
 export default router;

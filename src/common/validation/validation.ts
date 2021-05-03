@@ -1,25 +1,40 @@
 import Joi from 'joi';
-import { Request, RequestHandler } from 'express';
+import { RequestHandler } from 'express';
 import { mapValues } from 'lodash';
 
-type Validator<T> = {
-  [P in keyof T]: () => RequestHandler;
+type JoiValidators<T> = {
+  [P in keyof T]: RequestHandler[];
 };
 
-type Schemas = Record<string, Joi.Schema>;
+type CheckedProp = 'body' | 'params' | 'query';
 
-interface IValidation<T extends Schemas> {
-  schemas: T;
-}
+type MethodSchemas = Partial<Record<CheckedProp, Joi.Schema>>;
+type Schemas = Record<string, MethodSchemas>;
 
-class Validation<T extends Schemas> implements IValidation<T> {
+class Validation<T extends Schemas> {
   constructor(schemas: T) {
     this.schemas = schemas;
+
+    this.joi = mapValues(this.schemas, methodSchemas => {
+      const validators: RequestHandler[] = [];
+      const props = Object.keys(methodSchemas);
+      props.forEach(prop => {
+        const schema = methodSchemas[prop as CheckedProp];
+        if (schema) {
+          const validator = this.createValidator(schema, prop as CheckedProp);
+          validators.push(validator);
+        }
+      });
+
+      return validators;
+    });
   }
 
   schemas;
 
-  createValidator(schema: Joi.Schema, property: keyof Request): RequestHandler {
+  joi: JoiValidators<T>;
+
+  createValidator(schema: Joi.Schema, property: CheckedProp): RequestHandler {
     return (req, res, next) => {
       const { error } = schema.validate(req[property]);
       if (error) {
@@ -29,11 +44,6 @@ class Validation<T extends Schemas> implements IValidation<T> {
         next();
       }
     };
-  }
-
-  // using as a middleware: validator('body').post()
-  validator(property: keyof Request = 'body'): Validator<T> {
-    return mapValues(this.schemas, val => () => this.createValidator(val, property));
   }
 }
 
