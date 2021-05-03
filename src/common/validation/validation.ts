@@ -2,18 +2,18 @@ import Joi from 'joi';
 import { Request, RequestHandler } from 'express';
 import { mapValues } from 'lodash';
 
-type Schemas = Record<string, Joi.Schema>;
-
-type Validator = {
-  [P in keyof Schemas]: () => RequestHandler;
+type Validator<T> = {
+  [P in keyof T]: () => RequestHandler;
 };
 
-interface IValidation {
-  schemas: Schemas;
+type Schemas = Record<string, Joi.Schema>;
+
+interface IValidation<T extends Schemas> {
+  schemas: T;
 }
 
-class Validation implements IValidation {
-  constructor(schemas: Schemas) {
+class Validation<T extends Schemas> implements IValidation<T> {
+  constructor(schemas: T) {
     this.schemas = schemas;
   }
 
@@ -32,7 +32,7 @@ class Validation implements IValidation {
   }
 
   // using as a middleware: validator('body').post()
-  validator(property: keyof Request = 'body'): Validator {
+  validator(property: keyof Request = 'body'): Validator<T> {
     return mapValues(this.schemas, val => () => this.createValidator(val, property));
   }
 }
