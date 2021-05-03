@@ -79,6 +79,22 @@ describe('Recipes joi schemas validation', () => {
 
       expect(result.error?.message).toContain('ingredients[0]');
     });
+
+    it('Rejects empty object', () => {
+      const obj = {};
+
+      const result = patch.validate(obj);
+
+      expect(result.error).toBeDefined();
+    });
+
+    it('Rejects no value', () => {
+      const obj = undefined;
+
+      const result = patch.validate(obj);
+
+      expect(result.error).toBeDefined();
+    });
   });
 
   describe('POST', () => {
@@ -108,6 +124,22 @@ describe('Recipes joi schemas validation', () => {
       const result = post.validate(obj);
 
       expect(result.error).not.toBeDefined();
+    });
+
+    it('Rejects empty object', () => {
+      const obj = {};
+
+      const result = post.validate(obj);
+
+      expect(result.error).toBeDefined();
+    });
+
+    it('Rejects no value', () => {
+      const obj = undefined;
+
+      const result = post.validate(obj);
+
+      expect(result.error).toBeDefined();
     });
   });
 });

@@ -73,8 +73,10 @@ const postSchemaMap: PostSchemaMap = {
 };
 
 const recipesSchemas = {
-  post: { body: joi.object<RecipePostDto>(postSchemaMap).xor('pageHtml', 'pageUrl') },
-  patch: { body: joi.object<RecipePatchDto>(patchSchemaMap).oxor('pageHtml', 'pageUrl') },
+  post: { body: joi.object<RecipePostDto>(postSchemaMap).xor('pageHtml', 'pageUrl').required() },
+  patch: {
+    body: joi.object<RecipePatchDto>(patchSchemaMap).min(1).oxor('pageHtml', 'pageUrl').required(),
+  },
 };
 
 export default recipesSchemas;
