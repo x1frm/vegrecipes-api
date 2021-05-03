@@ -8,10 +8,10 @@ import {
   Body,
 } from 'node-mocks-http';
 
-type ReqResArray = [MockRequest<Request>, MockResponse<Response>];
+type ReqHandlerParams = [MockRequest<Request>, MockResponse<Response>];
 
 export interface Mock {
-  mock: ReqResArray;
+  reqHandlerParams: ReqHandlerParams;
   body: Body;
   status: number;
   params: (params: Body) => Mock;
@@ -20,25 +20,25 @@ export interface Mock {
 class MockHttp {
   private request(method: RequestMethod, url: string, body?: Body): Mock {
     return {
-      mock: [
+      reqHandlerParams: [
         createRequest({
           method,
           url,
           body,
         }),
         createResponse(),
-      ] as ReqResArray,
+      ] as ReqHandlerParams,
 
       get body() {
-        return this.mock[1]._getJSONData() as Body;
+        return this.reqHandlerParams[1]._getJSONData() as Body;
       },
 
       get status(): number {
-        return this.mock[1].statusCode;
+        return this.reqHandlerParams[1].statusCode;
       },
 
       params(params): Mock {
-        Object.assign(this.mock[0].params, params);
+        Object.assign(this.reqHandlerParams[0].params, params);
         return this;
       },
     };

@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import faker from 'faker';
 import { RecipeIngredientDto } from '../recipe.dto';
-import { patchSchema, postSchema } from '../validation/recipes.schemas';
+import recipesSchemas from '../validation/recipes.schemas';
 import { getRecipePostDto } from './helpers';
+
+const patchSchema = recipesSchemas.patch;
+const postSchema = recipesSchemas.post;
 
 describe('Recipes joi schemas validation', () => {
   describe('PATCH', () => {

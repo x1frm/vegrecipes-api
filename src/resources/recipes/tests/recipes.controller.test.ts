@@ -2,8 +2,12 @@ import mockHttp from '../../../../test/helpers/mock-http';
 import { clearDatabase } from '../../../../test/setup/db';
 import { RecipePostDto, RecipeResponseDto } from '../recipe.dto';
 import recipesController from '../recipes.controller';
-import recipesService from '../recipes.service';
-import { getRecipePostDto, getRecipeResponseDto, mockSaveExtHtml } from './helpers';
+import {
+  getRecipePostDto,
+  getRecipeResponseDto,
+  mockSaveExtHtml,
+  mockSaveUserHtml,
+} from './helpers';
 
 const url = '/api/recipes/';
 
@@ -12,15 +16,14 @@ const recipeRes = getRecipeResponseDto();
 
 const postOne = async (item: RecipePostDto = recipe) => {
   const mock = mockHttp.post(url, item);
-  await recipesController.add(...mock.mock);
+  await recipesController.add(...mock.reqHandlerParams);
   return mock;
 };
 
+mockSaveExtHtml();
+mockSaveUserHtml();
+
 describe('/recipes/', () => {
-  beforeEach(() => {
-    mockSaveExtHtml();
-    jest.spyOn(recipesService, 'saveUserHTML').mockImplementation();
-  });
   afterEach(clearDatabase);
 
   it('Gets empty array when no recipes were added yet', async () => {
@@ -28,7 +31,7 @@ describe('/recipes/', () => {
 
     const mock = mockHttp.get(url);
 
-    await recipesController.getAll(...mock.mock);
+    await recipesController.getAll(...mock.reqHandlerParams);
 
     expect(mock.body).toStrictEqual([]);
     expect(mock.status).toBe(200);
@@ -47,7 +50,7 @@ describe('/recipes/', () => {
     await postOne(pancakes);
     const get = mockHttp.get(url);
 
-    await recipesController.getAll(...get.mock);
+    await recipesController.getAll(...get.reqHandlerParams);
 
     expect(get.body).toMatchObject([recipeRes, pancakesRes]);
     expect(get.status).toBe(200);
@@ -59,7 +62,7 @@ describe('/recipes/', () => {
     const post = await postOne();
     const get = mockHttp.get(url);
 
-    await recipesController.getAll(...get.mock);
+    await recipesController.getAll(...get.reqHandlerParams);
 
     expect(post.body).toMatchObject(recipeRes);
     expect(get.body).toMatchObject([recipeRes]);
@@ -74,7 +77,7 @@ describe('/recipes/', () => {
     const id = (post.body as RecipeResponseDto)._id;
     const get = mockHttp.get(`${url}${id}`).params({ id });
 
-    await recipesController.getById(...get.mock);
+    await recipesController.getById(...get.reqHandlerParams);
 
     expect(get.body).toMatchObject(recipeRes);
     expect(get.status).toBe(200);
@@ -89,11 +92,11 @@ describe('/recipes/', () => {
     const postId = (post.body as RecipeResponseDto)._id;
     const patch = mockHttp.patch(`${url}${postId}`, updated).params({ id: postId });
 
-    await recipesController.update(...patch.mock);
+    await recipesController.update(...patch.reqHandlerParams);
 
     const id = (post.body as RecipeResponseDto)._id;
     const get = mockHttp.get(`${url}${id}`).params({ id });
-    await recipesController.getById(...get.mock);
+    await recipesController.getById(...get.reqHandlerParams);
 
     expect(patch.body.description).toBe(updated.description);
     expect(get.body).toMatchObject(updatedRes);
@@ -108,7 +111,7 @@ describe('/recipes/', () => {
     const id = (post.body as RecipeResponseDto)._id;
     const del = mockHttp.del(`${url}${id}`).params({ id });
 
-    await recipesController.remove(...del.mock);
+    await recipesController.remove(...del.reqHandlerParams);
 
     expect(del.status).toBe(204);
   });

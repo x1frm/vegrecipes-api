@@ -2,8 +2,12 @@ import supertest from 'supertest';
 import { clearDatabase } from '../../../../test/setup/db';
 import app from '../../../app';
 import { RecipePostDto, RecipeResponseDto } from '../recipe.dto';
-import recipesService from '../recipes.service';
-import { getRecipePostDto, mockSaveExtHtml, getRecipeResponseDto } from './helpers';
+import {
+  getRecipePostDto,
+  mockSaveExtHtml,
+  getRecipeResponseDto,
+  mockSaveUserHtml,
+} from './helpers';
 
 const request = supertest(app);
 const url = '/api/recipes/';
@@ -12,11 +16,10 @@ const recipe = getRecipePostDto();
 const recipeRes = getRecipeResponseDto();
 const postOne = (item: RecipePostDto = recipe) => request.post(url).send(item).expect(200);
 
+mockSaveExtHtml();
+mockSaveUserHtml();
+
 describe('/recipes/', () => {
-  beforeEach(() => {
-    mockSaveExtHtml();
-    jest.spyOn(recipesService, 'saveUserHTML').mockImplementation();
-  });
   afterEach(clearDatabase);
 
   it('Gets empty array when no recipes were added yet', async () =>
@@ -76,6 +79,18 @@ describe('/recipes/', () => {
   it('Deletes a recipe', async () => {
     const post = await postOne();
     return request.del(`${url}${(post.body as RecipeResponseDto)._id}`).expect(204);
+  });
+
+  describe('With incorrect data', () => {
+    const data = getRecipePostDto(undefined, ['name']);
+
+    it('Sends 400 with correct error', async () => {
+      const post = await request.post(url).send(data).expect(400);
+
+      expect(post.body.error).toBeDefined();
+      expect(post.body.error.name).toContain('ValidationError');
+      expect(post.body.error.message).toContain('name');
+    });
   });
 
   // it('Responses with 404 if id is not found', async () => {
