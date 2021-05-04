@@ -11,8 +11,8 @@ router
 
 router
   .route('/:id')
-  .get(recipesController.getById)
+  .get(recipesValidation.paramsId, recipesController.getById)
   .patch(recipesValidation.joi.patch, recipesController.update)
-  .delete(recipesController.remove);
+  .delete(recipesValidation.paramsId, recipesController.remove);
 
 export default router;

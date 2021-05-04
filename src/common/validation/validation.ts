@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import { RequestHandler } from 'express';
 import { mapValues } from 'lodash';
+import { paramsId } from './schemas';
 
 type JoiValidators<T> = {
   [P in keyof T]: RequestHandler[];
@@ -33,6 +34,8 @@ class Validation<T extends Schemas> {
   schemas;
 
   joi: JoiValidators<T>;
+
+  paramsId = this.createValidator(paramsId, 'params');
 
   createValidator(schema: Joi.Schema, property: CheckedProp): RequestHandler {
     return (req, res, next) => {

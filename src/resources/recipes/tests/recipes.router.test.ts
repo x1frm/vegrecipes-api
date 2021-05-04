@@ -59,7 +59,7 @@ describe('/recipes/', () => {
     expect(get.body).toMatchObject(recipeRes);
   });
 
-  it('Puts a recipe', async () => {
+  it('Patches a recipe', async () => {
     expect.assertions(2);
     const post = await postOne();
 
@@ -85,11 +85,41 @@ describe('/recipes/', () => {
     const data = getRecipePostDto(undefined, ['name']);
 
     it('Sends 400 with correct error', async () => {
+      expect.assertions(3);
+
       const post = await request.post(url).send(data).expect(400);
 
       expect(post.body.error).toBeDefined();
       expect(post.body.error.name).toContain('ValidationError');
       expect(post.body.error.message).toContain('name');
+    });
+  });
+
+  describe('With incorrect format of id provided', () => {
+    const data = getRecipePostDto();
+
+    it('Sends 400 to PATCH', async () => {
+      expect.assertions(1);
+
+      const patch = await request.patch(`${url}wrongId`).send(data).expect(400);
+
+      expect(patch.body.error.message).toContain('id');
+    });
+
+    it('Sends 400 to DELETE', async () => {
+      expect.assertions(1);
+
+      const patch = await request.del(`${url}wrongId`).expect(400);
+
+      expect(patch.body.error.message).toContain('id');
+    });
+
+    it('Sends 400 to GET', async () => {
+      expect.assertions(1);
+
+      const patch = await request.get(`${url}wrongId`).expect(400);
+
+      expect(patch.body.error.message).toContain('id');
     });
   });
 

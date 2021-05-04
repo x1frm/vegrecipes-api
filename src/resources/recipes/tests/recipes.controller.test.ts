@@ -83,7 +83,7 @@ describe('/recipes/', () => {
     expect(get.status).toBe(200);
   });
 
-  it('Puts a recipe', async () => {
+  it('Patches a recipe', async () => {
     expect.assertions(4);
 
     const post = await postOne();

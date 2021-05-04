@@ -1,7 +1,4 @@
 import joi from 'joi';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import objectid from 'joi-objectid';
 import {
   MAX_RECIPE_HTML_LENGTH,
   MAX_RECIPE_NAME_LENGTH,
@@ -10,10 +7,8 @@ import {
   MAX_REIPE_DESCRIPTION_LENGTH,
 } from '../../../common/const';
 import { DeepRecord } from '../../../common/types';
+import { objectId, paramsId } from '../../../common/validation/schemas';
 import { RecipePatchDto, RecipePostDto } from '../recipe.dto';
-
-// eslint-disable-next-line
-const oid: () => joi.Schema = objectid(joi);
 
 type PostSchemaMap = DeepRecord<RecipePostDto, joi.Schema>;
 type BaseSchemaMap = Omit<PostSchemaMap, 'pageUrl' | 'pageHTML'>;
@@ -27,7 +22,7 @@ const baseSchemaMap: BaseSchemaMap = {
     .unique('id')
     .items(
       joi.object({
-        id: oid().required(),
+        id: objectId().required(),
         amount: joi.number().min(0).max(100),
       })
     ),
@@ -42,7 +37,7 @@ const baseSchemaMap: BaseSchemaMap = {
     .unique('id')
     .items(
       joi.object({
-        id: oid().required(),
+        id: objectId().required(),
       })
     ),
   equipment: joi
@@ -50,7 +45,7 @@ const baseSchemaMap: BaseSchemaMap = {
     .unique('id')
     .items(
       joi.object({
-        id: oid().required(),
+        id: objectId().required(),
       })
     ),
 };
@@ -76,6 +71,7 @@ const recipesSchemas = {
   post: { body: joi.object<RecipePostDto>(postSchemaMap).xor('pageHtml', 'pageUrl').required() },
   patch: {
     body: joi.object<RecipePatchDto>(patchSchemaMap).min(1).oxor('pageHtml', 'pageUrl').required(),
+    params: paramsId,
   },
 };
 
